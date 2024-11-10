@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.baitapquatrinh2.R;
-import com.example.baitapquatrinh2.models.Customer;
+import com.example.baitapquatrinh2.DTO.Customer;
 import java.util.ArrayList;
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder> {

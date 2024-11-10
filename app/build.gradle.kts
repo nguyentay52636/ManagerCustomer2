@@ -38,6 +38,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.recyclerview)
     implementation("com.google.code.gson:gson:2.8.9")
+        implementation ("mysql:mysql-connector-java:8.0.31")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

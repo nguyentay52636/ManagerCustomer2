@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -21,16 +22,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListCustomersActivity"
+        <activity android:name=".Customer.ListCustomersActivity"
             android:exported="true">
         </activity>
-        <activity android:name=".LoginForm"
+        <activity android:name=".Credentials.LoginForm"
             android:exported="true">
         </activity>
-        <activity android:name=".ForgetPasswordActivity"
+        <activity android:name=".Credentials.ForgetPasswordActivity"
             android:exported="true">
         </activity>
-        <activity android:name=".FormConfrmChangePass"
+        <activity android:name=".Credentials.FormConfrmChangePass"
             android:exported="true">
         </activity>
         <activity android:name=".TestActivity"

@@ -1,4 +1,4 @@
-package com.example.baitapquatrinh2;
+package com.example.baitapquatrinh2.Credentials;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +10,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.baitapquatrinh2.Data.DataAccount;
-import com.example.baitapquatrinh2.models.Account;
+import com.example.baitapquatrinh2.DTO.Account;
+import com.example.baitapquatrinh2.MainActivity;
+import com.example.baitapquatrinh2.R;
+import com.example.baitapquatrinh2.ServicesData.DataAccount;
+
+import java.util.List;
 
 public class LoginForm extends AppCompatActivity {
     EditText userName;
@@ -51,28 +55,43 @@ public class LoginForm extends AppCompatActivity {
                     return;
                 }
 
-                boolean loginSuccess = false;
+                // Gọi phương thức loadAccounts để tải dữ liệu tài khoản từ file
+                List<Account> accountList = DataAccount.loadAccounts(LoginForm.this); // Gọi phương thức loadAccounts để lấy dữ liệu tài khoản
 
-                for (Account account : DataAccount.getAccountList()) {
+                boolean loginSuccess = false;
+                boolean usernameFound = false;
+
+                // Lặp qua danh sách tài khoản để kiểm tra đăng nhập
+                for (Account account : accountList) {
                     if (account.getUsername().equals(usernameInput)) {
+                        usernameFound = true;
                         if (account.getPassword().equals(passwordInput)) {
                             loginSuccess = true;
+                            break;
                         } else {
                             Toast.makeText(LoginForm.this, "Incorrect password.", Toast.LENGTH_SHORT).show();
+                            break;
                         }
-                        break;
                     }
                 }
 
                 // Xử lý kết quả đăng nhập
-                if (loginSuccess) {
-                    Toast.makeText(LoginForm.this, "Login success", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginForm.this, MainActivity.class);
-                    startActivity(intent);
+                if (usernameFound) {
+                    if (loginSuccess) {
+                        Toast.makeText(LoginForm.this, "Login success", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginForm.this, MainActivity.class);
+                        startActivity(intent);
+                    } else {
+                        // Thông báo lỗi nếu mật khẩu sai
+                        Toast.makeText(LoginForm.this, "Incorrect password.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(LoginForm.this, "Login failed. Invalid username.", Toast.LENGTH_SHORT).show();
+                    // Thông báo nếu tên đăng nhập không tìm thấy
+                    Toast.makeText(LoginForm.this, "Username not found.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+
     }
 }

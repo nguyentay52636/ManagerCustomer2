@@ -1,4 +1,4 @@
-package com.example.baitapquatrinh2;
+package com.example.baitapquatrinh2.Credentials;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +11,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.baitapquatrinh2.Data.DataAccount;
-import com.example.baitapquatrinh2.models.Account;
+import com.example.baitapquatrinh2.R;
+import com.example.baitapquatrinh2.ServicesData.DataAccount;
+import com.example.baitapquatrinh2.DTO.Account;
+
+import java.util.List;
 
 public class FormConfrmChangePass extends AppCompatActivity {
     EditText userName, password, rePassword;
@@ -45,10 +48,13 @@ public class FormConfrmChangePass extends AppCompatActivity {
                     }
 
                     if (newPassword.equals(confirmPassword)) {
-                        boolean isUpdated = resetPassword(username, newPassword);
+                        // Cập nhật mật khẩu
+                        boolean isUpdated = updatePassword(username, newPassword);
                         if (isUpdated) {
-                            saveToPreferences();
                             Toast.makeText(FormConfrmChangePass.this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(FormConfrmChangePass.this, LoginForm.class);
+                            startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(FormConfrmChangePass.this, "Error updating password or username not found.", Toast.LENGTH_SHORT).show();
                         }
@@ -60,19 +66,18 @@ public class FormConfrmChangePass extends AppCompatActivity {
         }
     }
 
-    private Boolean resetPassword(String username, String newPassword) {
-        return DataAccount.updatePassword(username, newPassword, this);
-    }
 
-    private void saveToPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("accounts", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
+    private boolean updatePassword(String username, String newPassword) {
+        List<Account> accountList = DataAccount.loadAccounts(FormConfrmChangePass.this);
+        for (Account account : accountList) {
+            if (account.getUsername().equals(username)) {
+                account.setPassword(newPassword);
 
-        for (Account account : DataAccount.getAccountList()) {
-            editor.putString(account.getUsername(), account.getPassword());
+                DataAccount.saveAccounts(FormConfrmChangePass.this);
+                return true;  // Trả về true khi thành công
+            }
         }
-
-        editor.apply();
+        return false;
     }
-}
+    }
+

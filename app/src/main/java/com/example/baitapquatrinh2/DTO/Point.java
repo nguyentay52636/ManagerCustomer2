@@ -1,4 +1,4 @@
-package com.example.baitapquatrinh2.models;
+package com.example.baitapquatrinh2.DTO;
 
 public class Point {
     private int addedPoint;

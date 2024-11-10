@@ -1,4 +1,4 @@
-package com.example.baitapquatrinh2;
+package com.example.baitapquatrinh2.Credentials;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +10,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.baitapquatrinh2.Data.DataAccount;
-import com.example.baitapquatrinh2.models.Account;
+import com.example.baitapquatrinh2.R;
+import com.example.baitapquatrinh2.ServicesData.DataAccount;
+import com.example.baitapquatrinh2.DTO.Account;
+
+import java.util.List;
 
 public class ForgetPasswordActivity extends AppCompatActivity {
     TextView btnBackLogin;
@@ -48,27 +51,29 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (isUsernameExists(username)) {
-                    // Chuyển sang màn hình nhập mật khẩu mới
-                    Intent intent = new Intent(ForgetPasswordActivity.this,FormConfrmChangePass.class);
-                    intent.putExtra("username", username);
+                // Gọi phương thức loadAccounts để lấy danh sách tài khoản từ file
+                List<Account> accountList = DataAccount.loadAccounts(ForgetPasswordActivity.this);
+
+                // Kiểm tra xem tài khoản có tồn tại không
+                boolean usernameExists = false;
+                for (Account account : accountList) {
+                    if (account.getUsername().equals(username)) {
+                        usernameExists = true;
+                        break;
+                    }
+                }
+
+                if (usernameExists) {
+                    // Nếu username tồn tại, chuyển sang màn hình thay đổi mật khẩu
+                    Intent intent = new Intent(ForgetPasswordActivity.this, FormConfrmChangePass.class);
+                    intent.putExtra("username", username); // Truyền username sang màn hình thay đổi mật khẩu
                     startActivity(intent);
-//                    finish();
+                    finish();
                 } else {
+                    // Nếu username không tồn tại, hiển thị thông báo
                     Toast.makeText(ForgetPasswordActivity.this, "Username not found", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-    }
-
-    // Hàm kiểm tra username tồn tại trong danh sách tài khoản
-    private boolean isUsernameExists(String username) {
-
-        for (Account account : DataAccount.getAccountList()) {
-            if(account.getUsername().equals(username)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

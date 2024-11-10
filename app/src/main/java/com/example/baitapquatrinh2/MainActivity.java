@@ -5,21 +5,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;  // Thêm log
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.baitapquatrinh2.Adapter.CustomerAdapter;
-import com.example.baitapquatrinh2.Data.CustomerData;
-import com.example.baitapquatrinh2.Data.DataAccount;
-import com.example.baitapquatrinh2.models.Account;
-import com.example.baitapquatrinh2.models.Customer;
+import com.example.baitapquatrinh2.Credentials.ForgetPasswordActivity;
+import com.example.baitapquatrinh2.ServicesData.CustomerData;
+import com.example.baitapquatrinh2.DTO.Customer;
 
 import java.util.ArrayList;
 
@@ -28,51 +24,29 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CustomerAdapter customerAdapter;
     private ArrayList<Customer> customerList;
-    Button btnChangePass ;
-
-
+    Button btnChangePass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout_activity);
 
-
         container = findViewById(R.id.frameId);
         Button buttonInput = findViewById(R.id.btnInput);
         Button buttonUse = findViewById(R.id.btnUse);
         Button buttonList = findViewById(R.id.btnList);
-        btnChangePass = findViewById(R.id.btnChangePass) ;
+        btnChangePass = findViewById(R.id.btnChangePass);
 
-
-
+        // Handle change password button
         btnChangePass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,ForgetPasswordActivity.class);
+                Intent intent = new Intent(MainActivity.this, ForgetPasswordActivity.class);
                 startActivity(intent);
-//                Boolean loginSuccess = false;
-//                TextView userName = findViewById(R.id.username) ;
-//                TextView password = findViewById(R.id.password);
-
-
-//                for(Account account : DataAccount.getAccountList()) {
-//                    // Kiểm tra nếu username và password khớp
-//                    if(account.getUsername().equals(userName.getText().toString()) &&
-//                            account.getPassword().equals(password.getText().toString())) {
-//                        loginSuccess = true;
-//                        break;
-//                    }
-//                }
-//                if(loginSuccess) {
-//                    Toast.makeText(MainActivity.this, "Change password  success!", Toast.LENGTH_SHORT).show();
-//
-//                } else {
-//                    Toast.makeText(MainActivity.this, "Change password  failed!", Toast.LENGTH_SHORT).show();
-//                }
-                }
+            }
         });
 
+        // Button to load input points layout
         buttonInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Button to load use points layout
         buttonUse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,22 +66,36 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 loadLayout(R.layout.list_item_customer);
-                setupRecyclerView();
+                recyclerView = findViewById(R.id.recyclerView); // Tìm lại RecyclerView sau khi layout mới được load
+                setupRecyclerView(); // Call setup after layout is loaded
             }
         });
     }
+
     private void setupRecyclerView() {
-        RecyclerView recyclerView = container.findViewById(R.id.recyclerView);
+        // Load customer data from assets (if not already loaded)
+        customerList = new ArrayList<>(CustomerData.loadCustomers(MainActivity.this));
+
+        // Ensure RecyclerView is available in the layout
+        recyclerView = container.findViewById(R.id.recyclerView);
+
         if (recyclerView != null) {
+            // Set up RecyclerView
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            customerList = CustomerData.getSampleCustomerList();
-            CustomerAdapter customerAdapter = new CustomerAdapter(customerList);
-            recyclerView.setAdapter(customerAdapter);
-            Toast.makeText(this, "Danh sách khách hàng đã được tải", Toast.LENGTH_SHORT).show();
+
+            if (customerList != null && !customerList.isEmpty()) {
+                // Set up the adapter
+                customerAdapter = new CustomerAdapter(customerList);
+                recyclerView.setAdapter(customerAdapter);
+                Toast.makeText(this, "Danh sách khách hàng đã được tải", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Không có dữ liệu khách hàng", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, "Không tìm thấy RecyclerView", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void loadLayout(int layoutResId) {
         container.removeAllViews();
         LayoutInflater.from(this).inflate(layoutResId, container, true);

@@ -1,0 +1,58 @@
+[
+  {
+    "phoneNumber": "0969157557",
+    "currentPoint": 9,
+    "creationDate": "2024-11-10",
+    "lastUpdatedDate": "2024-11-10",
+    "note": "First customer"
+  },
+  {
+    "phoneNumber": "0988888888",
+    "currentPoint": 4,
+    "creationDate": "2024-11-10",
+    "lastUpdatedDate": "2024-11-10",
+    "note": "Second customer"
+  },
+  {
+    "phoneNumber": "0909123456",
+    "currentPoint": 300,
+    "creationDate": "2024-11-10",
+    "lastUpdatedDate": "2024-11-10",
+    "note": "Third customer"
+  },
+  {
+    "phoneNumber": "0909123424",
+    "currentPoint": 500,
+    "creationDate": "2024-11-10",
+    "lastUpdatedDate": "2024-11-10",
+    "note": "Fourth customer"
+  },
+  {
+    "phoneNumber": "0909123424",
+    "currentPoint": 500,
+    "creationDate": "2024-11-10",
+    "lastUpdatedDate": "2024-11-10",
+    "note": "Fifth customer"
+  },
+  {
+    "phoneNumber": "0909123424",
+    "currentPoint": 500,
+    "creationDate": "2024-11-10",
+    "lastUpdatedDate": "2024-11-10",
+    "note": "Sixth customer"
+  },
+  {
+    "phoneNumber": "0909123424",
+    "currentPoint": 500,
+    "creationDate": "2024-11-10",
+    "lastUpdatedDate": "2024-11-10",
+    "note": "Seventh customer"
+  },
+  {
+    "phoneNumber": "0909123424",
+    "currentPoint": 500,
+    "creationDate": "2024-11-10",
+    "lastUpdatedDate": "2024-11-10",
+    "note": "Eighth customer"
+  }
+]
