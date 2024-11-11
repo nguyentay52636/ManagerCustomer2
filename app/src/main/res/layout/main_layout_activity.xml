@@ -25,57 +25,81 @@
 
     <!-- Button Section -->
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:padding="8dp"
+        android:weightSum="5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <!-- Nút Input -->
         <Button
             android:id="@+id/btnInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:backgroundTint="@color/code"
+            android:drawableLeft="@drawable/baseline_input_24"
             android:gravity="center"
-            android:text="INPUT"
-
+            android:padding="24dp"
             android:textColor="#FFFFFF" />
 
+        <!-- Nút Use -->
         <Button
-            android:backgroundTint="@color/code"
-
             android:id="@+id/btnUse"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
-            android:text="USE"
+            android:backgroundTint="@color/code"
+            android:drawableLeft="@drawable/baseline_person_24"
+            android:padding="24dp"
             android:textColor="#FFFFFF" />
 
-
+        <!-- Nút List -->
         <Button
             android:id="@+id/btnList"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:backgroundTint="@color/code"
-            android:text="LIST"
+            android:drawableLeft="@drawable/baseline_list_alt_24"
+            android:padding="24dp"
             android:textColor="#FFFFFF" />
-        <Button
-            android:backgroundTint="@color/code"
 
+        <!-- Nút Change Pass -->
+        <Button
             android:id="@+id/btnChangePass"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
-            android:text="Change pass"
+            android:backgroundTint="@color/code"
+            android:drawableLeft="@drawable/baseline_password_24"
+            android:padding="24dp"
             android:textColor="#FFFFFF" />
+
+        <!-- Nút Export -->
+        <Button
+            android:id="@+id/btnExport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/code"
+            android:drawableLeft="@drawable/baseline_import_export_24"
+            android:padding="24dp"
+            android:textColor="#FFFFFF" />
+
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
