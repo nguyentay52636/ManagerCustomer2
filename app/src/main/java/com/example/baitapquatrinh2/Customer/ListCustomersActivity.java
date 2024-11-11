@@ -6,8 +6,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.baitapquatrinh2.Adapter.CustomerAdapter;
 import com.example.baitapquatrinh2.R;
-import com.example.baitapquatrinh2.ServicesData.CustomerData;
-import com.example.baitapquatrinh2.DTO.Customer;
+import com.example.baitapquatrinh2.LoadData.CustomerData;
+import com.example.baitapquatrinh2.Models.Customer;
 import java.util.ArrayList;
 import android.widget.Toast;
 

@@ -1,6 +1,6 @@
-package com.example.baitapquatrinh2.ServicesData;
+package com.example.baitapquatrinh2.LoadData;
 
-import com.example.baitapquatrinh2.DTO.Customer;
+import com.example.baitapquatrinh2.Models.Customer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -36,12 +36,10 @@ public class CustomerData {
     }
 
 
-    // Lấy danh sách khách hàng
     public static List<Customer> getCustomerList() {
         return customerList;
     }
 
-    // Lưu danh sách khách hàng vào file
     public static void saveCustomers(Context context) {
         try {
             String json = new Gson().toJson(customerList);
@@ -52,7 +50,6 @@ public class CustomerData {
         }
     }
 
-    // Phương thức lấy ngày hiện tại dưới định dạng "yyyy-MM-dd"
     private static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return sdf.format(new Date());

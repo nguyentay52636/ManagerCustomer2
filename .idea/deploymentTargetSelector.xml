@@ -14,10 +14,10 @@
       <SelectionState runConfigName="LoginForm">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ForgetPasswordActivity">
+      <SelectionState runConfigName="TestActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="TestActivity">
+      <SelectionState runConfigName="LoginForm (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

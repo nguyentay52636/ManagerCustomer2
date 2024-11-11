@@ -1,6 +1,6 @@
-package com.example.baitapquatrinh2.ServicesData;
+package com.example.baitapquatrinh2.LoadData;
 
-import com.example.baitapquatrinh2.DTO.Account;
+import com.example.baitapquatrinh2.Models.Account;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -20,7 +20,6 @@ public class DataAccount {
     // Phương thức đọc file JSON từ thư mục assets
     public static List<Account> loadAccounts(Context context) {
         try {
-            // Mở file từ thư mục assets mà không cần đường dẫn tuyệt đối
             InputStream inputStream = context.getAssets().open("accounts.json");
             InputStreamReader reader = new InputStreamReader(inputStream);
             accountList = new Gson().fromJson(reader, new TypeToken<List<Account>>() {}.getType());

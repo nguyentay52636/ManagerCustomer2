@@ -1,4 +1,4 @@
-package com.example.baitapquatrinh2.DTO;
+package com.example.baitapquatrinh2.Models;
 
 public class Account {
     private String username;

@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.baitapquatrinh2.Adapter.CustomerAdapter;
 import com.example.baitapquatrinh2.Credentials.ForgetPasswordActivity;
-import com.example.baitapquatrinh2.ServicesData.CustomerData;
-import com.example.baitapquatrinh2.DTO.Customer;
+import com.example.baitapquatrinh2.LoadData.CustomerData;
+import com.example.baitapquatrinh2.Models.Customer;
 
 import java.util.ArrayList;
 

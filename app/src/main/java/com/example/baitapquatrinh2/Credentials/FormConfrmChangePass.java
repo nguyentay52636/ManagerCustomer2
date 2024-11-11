@@ -1,8 +1,8 @@
 package com.example.baitapquatrinh2.Credentials;
 
-import android.content.Context;
+import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,8 +12,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.baitapquatrinh2.R;
-import com.example.baitapquatrinh2.ServicesData.DataAccount;
-import com.example.baitapquatrinh2.DTO.Account;
+import com.example.baitapquatrinh2.LoadData.DataAccount;
+import com.example.baitapquatrinh2.Models.Account;
 
 import java.util.List;
 
@@ -63,21 +63,24 @@ public class FormConfrmChangePass extends AppCompatActivity {
                     }
                 }
             });
+
         }
     }
 
 
     private boolean updatePassword(String username, String newPassword) {
-        List<Account> accountList = DataAccount.loadAccounts(FormConfrmChangePass.this);
-        for (Account account : accountList) {
-            if (account.getUsername().equals(username)) {
-                account.setPassword(newPassword);
+        ContentValues values = new ContentValues();
+        values.put("password", newPassword);
 
-                DataAccount.saveAccounts(FormConfrmChangePass.this);
-                return true;  // Trả về true khi thành công
-            }
-        }
-        return false;
+        // Khởi tạo selection và selectionArgs để tìm đúng username
+        String selection = "username = ?";
+        String[] selectionArgs = new String[]{username};
+
+        // Thực hiện cập nhật thông qua ContentResolver
+        Uri uri = Uri.parse("content://com.example.baitapquatrinh2.provider/accounts");
+        int rowsUpdated = getContentResolver().update(uri, values, selection, selectionArgs);
+        return rowsUpdated > 0;
     }
-    }
+
+}
 

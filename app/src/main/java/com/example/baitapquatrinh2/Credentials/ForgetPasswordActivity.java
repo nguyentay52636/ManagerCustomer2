@@ -11,8 +11,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.baitapquatrinh2.R;
-import com.example.baitapquatrinh2.ServicesData.DataAccount;
-import com.example.baitapquatrinh2.DTO.Account;
+import com.example.baitapquatrinh2.LoadData.DataAccount;
+import com.example.baitapquatrinh2.Models.Account;
 
 import java.util.List;
 

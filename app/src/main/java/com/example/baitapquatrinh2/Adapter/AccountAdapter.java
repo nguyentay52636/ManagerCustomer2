@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.baitapquatrinh2.DTO.Account;
+import com.example.baitapquatrinh2.Models.Account;
 import com.example.baitapquatrinh2.R;
 
 import java.util.ArrayList;
