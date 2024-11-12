@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.baitapquatrinh2.Adapter.CustomerAdapter;
+import com.example.baitapquatrinh2.ContentProvider.CustomerProvider;
 import com.example.baitapquatrinh2.R;
 import com.example.baitapquatrinh2.LoadData.CustomerData;
 import com.example.baitapquatrinh2.Models.Customer;
@@ -26,7 +27,7 @@ public class ListCustomersActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Load customer data from JSON file in assets
-        customerList = new ArrayList<>(CustomerData.loadCustomers(this));  // Initialize if null
+        customerList = new ArrayList<>(CustomerProvider.loadCustomers(this));  // Initialize if null
 
         // Check if data is loaded correctly
         if (customerList.isEmpty()) {

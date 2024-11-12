@@ -31,6 +31,7 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/etCustomerPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -50,6 +51,7 @@
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/etCurrentPoint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -63,16 +65,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="Input new point"
+            android:text="Used points"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/etNewPoint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:backgroundTint="#BBBBBB"
-            android:hint="Enter new points"
+            android:hint="Enter used points"
             android:inputType="number"
             android:textColor="#FFFFFF"
             android:textColorHint="#BBBBBB" />
@@ -87,6 +90,7 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/etNote"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_marginBottom="20dp"
@@ -104,6 +108,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -112,6 +117,7 @@
                 android:textColor="#FFFFFF" />
 
             <Button
+                android:id="@+id/btnSaveNext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/code"
