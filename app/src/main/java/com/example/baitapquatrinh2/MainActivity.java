@@ -1,33 +1,26 @@
 package com.example.baitapquatrinh2;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.baitapquatrinh2.Adapter.CustomerAdapter;
-import com.example.baitapquatrinh2.ContentProvider.CustomerProvider;
 import com.example.baitapquatrinh2.Credentials.ForgetPasswordActivity;
 import com.example.baitapquatrinh2.LoadData.CustomerData;
 import com.example.baitapquatrinh2.Models.Customer;
-import com.example.baitapquatrinh2.Utils.XMLHelper;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private FrameLayout container;
@@ -64,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         btnExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, TestActivity.class);
+                Intent intent = new Intent(MainActivity.this, ExportActivity.class);
                 startActivity(intent);
             }
         });
@@ -101,39 +94,38 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 loadLayout(R.layout.list_item_customer);
                 recyclerView = findViewById(R.id.recyclerView); // Tìm lại RecyclerView sau khi layout mới được load
-                setupRecyclerView(); // Call setup after layout is loaded
+                if (recyclerView == null) {
+                    return;
+                }
+                setupRecyclerView();
+
             }
         });
     }
-
-    private void setupRecyclerView() {
-        // Load customer data from assets (if not already loaded)
-        customerList = new ArrayList<>(CustomerData.loadCustomers(MainActivity.this));
-
-        // Ensure RecyclerView is available in the layout
-        recyclerView = container.findViewById(R.id.recyclerView);
-
-        if (recyclerView != null) {
-            // Set up RecyclerView
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            if (customerList != null && !customerList.isEmpty()) {
-                // Set up the adapter
-                customerAdapter = new CustomerAdapter(customerList);
-                recyclerView.setAdapter(customerAdapter);
-                Toast.makeText(this, "Danh sách khách hàng đã được tải", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Không có dữ liệu khách hàng", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "Không tìm thấy RecyclerView", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void loadLayout(int layoutResId) {
         container.removeAllViews();
         LayoutInflater.from(this).inflate(layoutResId, container, true);
     }
+    private void setupRecyclerView() {
+        // Tải dữ liệu khách hàng
+        customerList = new ArrayList<>(CustomerData.loadCustomers(this));
+
+        // Kiểm tra nếu danh sách khách hàng trống
+        if (customerList == null || customerList.isEmpty()) {
+            Toast.makeText(this, "Không có dữ liệu khách hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Thiết lập LayoutManager cho RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Thiết lập Adapter
+        customerAdapter = new CustomerAdapter(customerList);
+        recyclerView.setAdapter(customerAdapter);
+        Toast.makeText(this, "Danh sách khách hàng đã được tải", Toast.LENGTH_SHORT).show();
+    }
+
+
     private void openExportedFile(File file) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file), "text/xml");

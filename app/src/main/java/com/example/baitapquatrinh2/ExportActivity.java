@@ -1,6 +1,5 @@
 package com.example.baitapquatrinh2;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestActivity extends AppCompatActivity {
+public class ExportActivity extends AppCompatActivity {
 
     private Button btnExportFile, btnOpenFile, btnSendEmail;
     private TextView tvStatus;
@@ -56,11 +55,11 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 List<Customer> customers = getSampleCustomers();
-                xmlFile = XMLHelper.exportCustomersToXML(customers, TestActivity.this);
+                xmlFile = XMLHelper.exportCustomersToXML(customers, ExportActivity.this);
 
                 if (xmlFile != null && xmlFile.exists()) {
                     tvStatus.setText("Xuất file thành công tại " + xmlFile.getPath());
-                    Toast.makeText(TestActivity.this, "Xuất file XML thành công!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExportActivity.this, "Xuất file XML thành công!", Toast.LENGTH_SHORT).show();
 
                     // Đọc và ghi nội dung file XML ra Logcat
                     try (BufferedReader reader = new BufferedReader(new FileReader(xmlFile))) {
@@ -76,7 +75,7 @@ public class TestActivity extends AppCompatActivity {
                     }
                 } else {
                     tvStatus.setText("Xuất file thất bại.");
-                    Toast.makeText(TestActivity.this, "Xuất file XML thất bại!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExportActivity.this, "Xuất file XML thất bại!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -87,7 +86,7 @@ public class TestActivity extends AppCompatActivity {
                 if (xmlFile != null && xmlFile.exists()) {
                     openXmlFile(xmlFile);
                 } else {
-                    Toast.makeText(TestActivity.this, "File không tồn tại!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExportActivity.this, "File không tồn tại!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -99,7 +98,7 @@ public class TestActivity extends AppCompatActivity {
                 if (xmlFile != null && xmlFile.exists()) {
                     sendEmailWithAttachment(xmlFile);
                 } else {
-                    Toast.makeText(TestActivity.this, "File không tồn tại để gửi email!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExportActivity.this, "File không tồn tại để gửi email!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

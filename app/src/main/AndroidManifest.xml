@@ -39,10 +39,12 @@
         <activity android:name=".Credentials.FormConfrmChangePass"
             android:exported="true">
         </activity>
-        <activity android:name=".TestActivity"
+        <activity android:name=".ExportActivity"
             android:exported="true">
         </activity>
-
+        <activity android:name=".Utils.TestActivity"
+            android:exported="true">
+        </activity>
         <provider
             android:name=".ContentProvider.AccountProvider"
             android:authorities="com.example.baitapquatrinh2.provider"
