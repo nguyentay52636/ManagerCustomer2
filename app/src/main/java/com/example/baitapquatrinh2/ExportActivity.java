@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+
+import com.example.baitapquatrinh2.ContentProvider.CustomerProvider;
 import com.example.baitapquatrinh2.Models.Customer;
 import com.example.baitapquatrinh2.Utils.XMLHelper;
 
@@ -51,11 +53,39 @@ public class ExportActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
+//        btnExportFile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                List<Customer> customers = getSampleCustomers();
+//                xmlFile = XMLHelper.exportCustomersToXML(customers, ExportActivity.this);
+//
+//                if (xmlFile != null && xmlFile.exists()) {
+//                    tvStatus.setText("Xuất file thành công tại " + xmlFile.getPath());
+//                    Toast.makeText(ExportActivity.this, "Xuất file XML thành công!", Toast.LENGTH_SHORT).show();
+//
+//                    // Đọc và ghi nội dung file XML ra Logcat
+//                    try (BufferedReader reader = new BufferedReader(new FileReader(xmlFile))) {
+//                        StringBuilder fileContent = new StringBuilder();
+//                        String line;
+//                        while ((line = reader.readLine()) != null) {
+//                            fileContent.append(line).append("\n");
+//                        }
+//                        // Ghi nội dung file XML vào Logcat
+//                        Log.d("XMLFileContent", fileContent.toString());
+//                    } catch (IOException e) {
+//                        Log.e("XMLFileContent", "Lỗi khi đọc file XML: " + e.getMessage());
+//                    }
+//                } else {
+//                    tvStatus.setText("Xuất file thất bại.");
+//                    Toast.makeText(ExportActivity.this, "Xuất file XML thất bại!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
         btnExportFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Customer> customers = getSampleCustomers();
-                xmlFile = XMLHelper.exportCustomersToXML(customers, ExportActivity.this);
+                List<Customer> customers = CustomerProvider.loadCustomers(getApplicationContext());
+                File xmlFile = XMLHelper.exportCustomersToXML(customers, ExportActivity.this);
 
                 if (xmlFile != null && xmlFile.exists()) {
                     tvStatus.setText("Xuất file thành công tại " + xmlFile.getPath());
@@ -68,8 +98,8 @@ public class ExportActivity extends AppCompatActivity {
                         while ((line = reader.readLine()) != null) {
                             fileContent.append(line).append("\n");
                         }
-                        // Ghi nội dung file XML vào Logcat
-                        Log.d("XMLFileContent", fileContent.toString());
+                        Log.d("XMLFileContent", fileContent.toString());  // Log nội dung XML
+
                     } catch (IOException e) {
                         Log.e("XMLFileContent", "Lỗi khi đọc file XML: " + e.getMessage());
                     }
@@ -79,6 +109,7 @@ public class ExportActivity extends AppCompatActivity {
                 }
             }
         });
+
         // Xử lý sự kiện mở file
         btnOpenFile.setOnClickListener(new View.OnClickListener() {
             @Override

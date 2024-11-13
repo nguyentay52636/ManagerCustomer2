@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><customers>
+    <customer>
+        <phoneNumber>0846777901</phoneNumber>
+        <currentPoint>100</currentPoint>
+        <creationDate>2024-11-10</creationDate>
+        <lastUpdatedDate>2024-11-10</lastUpdatedDate>
+        <note>First customer</note>
+    </customer>
+    <customer>
+        <phoneNumber>0988888888</phoneNumber>
+        <currentPoint>4</currentPoint>
+        <creationDate>2024-11-10</creationDate>
+        <lastUpdatedDate>2024-11-10</lastUpdatedDate>
+        <note>Second customer</note>
+    </customer>
+    <customer>
+        <phoneNumber>0909123456</phoneNumber>
+        <currentPoint>300</currentPoint>
+        <creationDate>2024-11-10</creationDate>
+        <lastUpdatedDate>2024-11-10</lastUpdatedDate>
+        <note>Third customer</note>
+    </customer>
+    <customer>
+        <phoneNumber>0909123424</phoneNumber>
+        <currentPoint>500</currentPoint>
+        <creationDate>2024-11-10</creationDate>
+        <lastUpdatedDate>2024-11-10</lastUpdatedDate>
+        <note>Fourth customer</note>
+    </customer>
+    <customer>
+        <phoneNumber>0909123424</phoneNumber>
+        <currentPoint>500</currentPoint>
+        <creationDate>2024-11-10</creationDate>
+        <lastUpdatedDate>2024-11-10</lastUpdatedDate>
+        <note>Fifth customer</note>
+    </customer>
+    <customer>
+        <phoneNumber>0909123424</phoneNumber>
+        <currentPoint>500</currentPoint>
+        <creationDate>2024-11-10</creationDate>
+        <lastUpdatedDate>2024-11-10</lastUpdatedDate>
+        <note>Sixth customer</note>
+    </customer>
+    <customer>
+        <phoneNumber>0909123424</phoneNumber>
+        <currentPoint>500</currentPoint>
+        <creationDate>2024-11-10</creationDate>
+        <lastUpdatedDate>2024-11-10</lastUpdatedDate>
+        <note>Seventh customer</note>
+    </customer>
+    <customer>
+        <phoneNumber>0909123424</phoneNumber>
+        <currentPoint>500</currentPoint>
+        <creationDate>2024-11-10</creationDate>
+        <lastUpdatedDate>2024-11-10</lastUpdatedDate>
+        <note>Eighth customer</note>
+    </customer>
+</customers>

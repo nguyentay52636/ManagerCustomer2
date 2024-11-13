@@ -11,11 +11,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.baitapquatrinh2.Adapter.CustomerAdapter;
 import com.example.baitapquatrinh2.Credentials.ForgetPasswordActivity;
+import com.example.baitapquatrinh2.Customer.UsePointFragment;
 import com.example.baitapquatrinh2.LoadData.CustomerData;
 import com.example.baitapquatrinh2.Models.Customer;
 
@@ -85,7 +87,11 @@ public class MainActivity extends AppCompatActivity {
         buttonUse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadLayout(R.layout.use_point_activity);
+//                loadLayout(R.layout.use_point_activity);
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frameId, new UsePointFragment());
+                transaction.commit();
+
             }
         });
 
