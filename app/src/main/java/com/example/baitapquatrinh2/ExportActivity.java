@@ -1,5 +1,6 @@
 package com.example.baitapquatrinh2;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -110,18 +111,14 @@ public class ExportActivity extends AppCompatActivity {
             }
         });
 
-        // Xử lý sự kiện mở file
+        File xmlFile = new File("/storage/emulated/0/Android/data/com.example.baitapquatrinh2/files/customers.xml");
+
         btnOpenFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (xmlFile != null && xmlFile.exists()) {
-                    openXmlFile(xmlFile);
-                } else {
-                    Toast.makeText(ExportActivity.this, "File không tồn tại!", Toast.LENGTH_SHORT).show();
-                }
+                openXmlFile();
             }
         });
-
         // Xử lý sự kiện gửi email
         btnSendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,13 +139,52 @@ public class ExportActivity extends AppCompatActivity {
         return customers;
     }
 
-    private void openXmlFile(File file) {
-        Uri uri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);
+
+//private void openXmlFile() {
+//    // Đường dẫn tới file XML
+//    File file = new File("/storage/emulated/0/Android/data/com.example.baitapquatrinh2/files/customers.xml");
+//
+//    if (file.exists()) {
+//        // Sử dụng FileProvider để tạo URI an toàn
+//        Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", file);
+//
+//        // Tạo Intent để mở file XML với MIME type "text/xml"
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setDataAndType(uri, "text/xml");
+//        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // Cấp quyền đọc tạm thời
+//
+//        // Mở file với Intent chooser
+//        startActivity(Intent.createChooser(intent, "Mở file XML"));
+//    } else {
+//        Toast.makeText(this, "File không tồn tại!", Toast.LENGTH_SHORT).show();
+//    }
+//}
+private void openXmlFile() {
+    if (xmlFile != null && xmlFile.exists()) {
+        // Sử dụng FileProvider để tạo URI an toàn
+        Uri uri = FileProvider.getUriForFile(
+                this,
+                getPackageName() + ".provider",
+                xmlFile
+        );
+
+        // Tạo Intent để mở file XML với MIME type "text/xml"
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(uri, "text/xml");
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivity(Intent.createChooser(intent, "Mở file XML với"));
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // Cấp quyền đọc tạm thời
+
+        try {
+            // Mở file với Intent chooser
+            startActivity(Intent.createChooser(intent, "Mở file XML"));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, "Không có ứng dụng nào để mở file XML!", Toast.LENGTH_SHORT).show();
+        }
+    } else {
+        Toast.makeText(this, "File không tồn tại!", Toast.LENGTH_SHORT).show();
     }
+}
+
+
 
     private void sendEmailWithAttachment(File file) {
         Uri uri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);

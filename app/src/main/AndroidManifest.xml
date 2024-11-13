@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Quyền truy cập Internet và bộ nhớ ngoài -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,7 +19,7 @@
         android:theme="@style/Theme.Baitapquatrinh2"
         tools:targetApi="31">
 
-        <!-- Main activity for launching the app -->
+        <!-- Main activity cho ứng dụng -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -26,51 +29,38 @@
             </intent-filter>
         </activity>
 
-        <!-- Other Activities -->
-        <activity android:name=".Customer.ListCustomersActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name=".Credentials.LoginForm"
-            android:exported="true">
-        </activity>
-        <activity android:name=".Credentials.ForgetPasswordActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name=".Credentials.FormConfrmChangePass"
-            android:exported="true">
-        </activity>
-        <activity android:name=".Customer.UsePointFragment"
-            android:exported="true">
-        </activity>
-        <activity android:name=".ExportActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name=".Utils.TestActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name=".TestXuatFile"
-            android:exported="true">
-        </activity>
+        <!-- Các Activity khác -->
+        <activity android:name=".Customer.ListCustomersFragment" android:exported="true"/>
+        <activity android:name=".Credentials.LoginForm" android:exported="true"/>
+        <activity android:name=".Credentials.ForgetPasswordActivity" android:exported="true"/>
+        <activity android:name=".Credentials.FormConfrmChangePass" android:exported="true"/>
+        <activity android:name=".Customer.UsePointFragment" android:exported="true"/>
+        <activity android:name=".ExportActivity" android:exported="true"/>
+        <activity android:name=".Utils.TestActivity" android:exported="true"/>
+        <activity android:name=".TestXuatFile" android:exported="true"/>
+
+        <!-- Cung cấp FileProvider -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.baitapquatrinh2.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- Các ContentProvider khác -->
         <provider
             android:name=".ContentProvider.AccountProvider"
             android:authorities="com.example.baitapquatrinh2.provider"
             android:exported="true"
             android:grantUriPermissions="true"/>
-
         <provider
             android:name=".ContentProvider.CustomerProvider"
             android:authorities="com.example.baitapquatrinh2.provider"
             android:exported="true"
             android:grantUriPermissions="true"/>
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@layout/filepaths" />
-        </provider>
 
     </application>
 

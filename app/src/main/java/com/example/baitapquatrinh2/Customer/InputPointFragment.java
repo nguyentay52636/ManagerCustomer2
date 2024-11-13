@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class UsePointFragment extends Fragment {
+public class InputPointFragment extends Fragment {
 
     private EditText etCustomerPhone, etNewPoint, etNote;
     private TextView tvCurrentPoint;
@@ -39,7 +39,7 @@ public class UsePointFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.use_point_activity, container, false);
+        View view = inflater.inflate(R.layout.input_point_activity, container, false);
 
         etCustomerPhone = view.findViewById(R.id.etCustomerPhone);
         etNewPoint = view.findViewById(R.id.etNewPoint);
@@ -150,7 +150,7 @@ public class UsePointFragment extends Fragment {
         }
 
         String creationDate = (existingCustomer != null) ? existingCustomer.getCreationDate() : getCurrentDate();
-        Customer updatedCustomer = new Customer(phone, currentPoint, creationDate, getCurrentDate(), note);
+        Customer updatedCustomer = new Customer(phone, currentPoint+newPoint, creationDate, getCurrentDate(), note);
 
         boolean customerExists = false;
         for (int i = 0; i < customerList.size(); i++) {
