@@ -152,8 +152,10 @@ import android.util.Log;
 
 import com.example.baitapquatrinh2.Models.Customer;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -179,8 +181,24 @@ public class CustomerProvider extends ContentProvider {
         return customerList != null;
     }
 
-    // Phương thức để tải dữ liệu từ file JSON
-//    private List<Customer> loadCustomersFromJSON(Context context) {
+
+//
+//
+//public static List<Customer> loadCustomers(Context context) {
+//    List<Customer> customerList = new ArrayList<>();  // Initialize here
+//    try {
+//        InputStream inputStream = context.getAssets().open("customers.json");
+//        InputStreamReader reader = new InputStreamReader(inputStream);
+//        customerList = new Gson().fromJson(reader, new TypeToken<List<Customer>>() {}.getType());
+//        reader.close();
+//        inputStream.close();
+//    } catch (IOException e) {
+//        Log.e("CustomerData", "Lỗi khi đọc file customers.json: " + e.getMessage());
+//    }
+//    return customerList;  // Ensure you return a non-null list
+//}
+
+//  public static   List<Customer> loadCustomers(Context context) {
 //        try {
 //            // Kiểm tra xem file đã tồn tại trong bộ nhớ nội bộ chưa
 //            File file = new File(context.getFilesDir(), "customers.json");
@@ -198,61 +216,40 @@ public class CustomerProvider extends ContentProvider {
 //                inputStream.close();
 //            }
 //
-//
-//
 //            // Đọc file từ bộ nhớ nội bộ
 //            InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
 //            return new Gson().fromJson(reader, new TypeToken<List<Customer>>() {}.getType());
 //        } catch (IOException e) {
 //            Log.e(TAG, "Lỗi khi đọc file customers.json", e);
 //        }
-//        return new ArrayList<>(); // Trả về danh sách rỗng nếu có lỗi
+//        return null;
 //    }
+public static List<Customer> loadCustomers(Context context) {
+    try {
+        File file = new File(context.getFilesDir(), "customers.json");
+        if (!file.exists()) {
+            InputStream inputStream = context.getAssets().open("customers.json");
+            FileOutputStream outputStream = new FileOutputStream(file);
 
-    // Phương thức để lưu danh sách khách hàng vào file JSON
-    private void saveCustomersToJson(Context context, List<Customer> customerList) {
-        try {
-            Gson gson = new Gson();
-            String json = gson.toJson(customerList);
-
-            // Ghi file vào bộ nhớ nội bộ
-            FileOutputStream fos = context.openFileOutput("customers.json", Context.MODE_PRIVATE);
-            fos.write(json.getBytes());
-            fos.flush(); // Đảm bảo tất cả dữ liệu được ghi
-            fos.close();
-
-            Log.d("SaveJson", "Đã lưu dữ liệu customer vào file JSON.");
-        } catch (IOException e) {
-            Log.e("SaveJson", "Lỗi khi lưu file JSON", e);
-        }
-    }
-    public static List<Customer> loadCustomers(Context context) {
-        List<Customer> customerList = new ArrayList<>(); // Initialize here
-        try {
-            File file = new File(context.getFilesDir(), "customers.json");
-
-            if (!file.exists()) {
-                InputStream inputStream = context.getAssets().open("customers.json");
-                FileOutputStream outputStream = new FileOutputStream(file);
-
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = inputStream.read(buffer)) > 0) {
-                    outputStream.write(buffer, 0, length);
-                }
-                outputStream.close();
-                inputStream.close();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
             }
+            outputStream.close();
+            inputStream.close();
 
-            // Đọc file từ bộ nhớ nội bộ
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
-            customerList = new Gson().fromJson(reader, new TypeToken<List<Customer>>() {}.getType());
-            reader.close();
-        } catch (IOException e) {
-            Log.e("CustomerData", "Lỗi khi đọc file customers.json: " + e.getMessage());
+            Log.d("CustomerProvider", "File customers.json đã được sao chép từ assets vào bộ nhớ nội bộ.");
         }
-        return customerList; // Ensure you return a non-null list
+
+        // Đọc file từ bộ nhớ nội bộ
+        InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
+        return new Gson().fromJson(reader, new TypeToken<List<Customer>>() {}.getType());
+    } catch (IOException e) {
+        Log.e("CustomerProvider", "Lỗi khi đọc file customers.json", e);
     }
+    return null;
+}
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
@@ -300,5 +297,21 @@ public class CustomerProvider extends ContentProvider {
         return customerList;
     }
 
+    public void saveCustomersToJson(Context context, List<Customer> customerList) {
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(customerList); // Chuyển đổi danh sách thành JSON
+
+            // Ghi dữ liệu vào file trong bộ nhớ nội bộ
+            FileOutputStream fos = context.openFileOutput("customers.json", Context.MODE_PRIVATE);
+            fos.write(json.getBytes()); // Ghi dữ liệu JSON dưới dạng byte
+            fos.flush(); // Đảm bảo dữ liệu được ghi hoàn chỉnh
+            fos.close(); // Đóng file
+
+            Log.d("SaveJson", "Đã lưu dữ liệu khách hàng vào file JSON.");
+        } catch (IOException e) {
+            Log.e("SaveJson", "Lỗi khi lưu file JSON", e);
+        }
+    }
 
 }

@@ -48,10 +48,8 @@ public class AccountProvider extends ContentProvider {
 //    }
     private List<Account> loadAccounts(Context context) {
         try {
-            // Kiểm tra xem file đã tồn tại trong bộ nhớ nội bộ chưa
             File file = new File(context.getFilesDir(), "accounts.json");
             if (!file.exists()) {
-                // Sao chép file từ assets vào bộ nhớ nội bộ
                 InputStream inputStream = context.getAssets().open("accounts.json");
                 FileOutputStream outputStream = new FileOutputStream(file);
 
@@ -72,6 +70,8 @@ public class AccountProvider extends ContentProvider {
         }
         return null;
     }
+
+
 
 
     @Override

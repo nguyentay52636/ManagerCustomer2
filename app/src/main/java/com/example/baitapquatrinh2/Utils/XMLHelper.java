@@ -62,7 +62,7 @@ public class XMLHelper {
             transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
             transformer.transform(new DOMSource(document), new StreamResult(new FileOutputStream(file)));
 
-            return file;  // Trả về đối tượng File
+            return file;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,11 +70,46 @@ public class XMLHelper {
         }
 
     }
+//public static File exportCustomersToXML(List<Customer> customers, Context context) {
+//    File xmlFile = null;
+//
+//    try {
+//        File directory = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "Documents");
+//        if (!directory.exists()) {
+//            directory.mkdirs();
+//        }
+//
+//        xmlFile = new File(directory, "customers.xml");
+//
+//        FileWriter writer = new FileWriter(xmlFile);
+//        writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+//        writer.write("<customers>\n");
+//
+//        // Lặp qua từng đối tượng Customer trong danh sách và ghi vào file XML
+//        for (Customer customer : customers) {
+//            writer.write("    <customer>\n");
+//            writer.write("        <phoneNumber>" + customer.getPhoneNumber() + "</phoneNumber>\n");
+//            writer.write("        <currentPoint>" + customer.getCurrentPoint() + "</currentPoint>\n");
+//            writer.write("        <creationDate>" + customer.getCreationDate() + "</creationDate>\n");
+//            writer.write("        <lastUpdatedDate>" + customer.getLastUpdatedDate() + "</lastUpdatedDate>\n");
+//            writer.write("        <note>" + customer.getNote() + "</note>\n");
+//            writer.write("    </customer>\n");
+//        }
+//
+//        writer.write("</customers>");
+//        writer.flush();
+//        writer.close();
+//
+//    } catch (IOException e) {
+//        e.printStackTrace();
+//        return null;
+//    }
+//
+//    return xmlFile;
+//}
 
 
 
-
-    // Phương thức nhập danh sách khách hàng từ file XML
     public static List<Customer> importCustomersFromXML(Context context) {
         List<Customer> customerList = new ArrayList<>();
 

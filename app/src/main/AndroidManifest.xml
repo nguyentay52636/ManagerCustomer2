@@ -42,7 +42,7 @@
         <!-- Cung cấp FileProvider -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.baitapquatrinh2.provider"
+            android:authorities="com.example.baitapquatrinh2"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -53,14 +53,26 @@
         <!-- Các ContentProvider khác -->
         <provider
             android:name=".ContentProvider.AccountProvider"
-            android:authorities="com.example.baitapquatrinh2.provider"
+            android:authorities="com.example.baitapquatrinh2.provider.accounts"
             android:exported="true"
             android:grantUriPermissions="true"/>
+
         <provider
             android:name=".ContentProvider.CustomerProvider"
             android:authorities="com.example.baitapquatrinh2.provider"
             android:exported="true"
             android:grantUriPermissions="true"/>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.baitapquatrinh2.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+
 
     </application>
 

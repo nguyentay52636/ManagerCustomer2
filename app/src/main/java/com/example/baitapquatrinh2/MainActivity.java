@@ -16,13 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.baitapquatrinh2.Adapter.CustomerAdapter;
+import com.example.baitapquatrinh2.ContentProvider.CustomerProvider;
 import com.example.baitapquatrinh2.Credentials.ForgetPasswordActivity;
 import com.example.baitapquatrinh2.Customer.InputPointFragment;
 import com.example.baitapquatrinh2.Customer.UsePointFragment;
-import com.example.baitapquatrinh2.LoadData.CustomerData;
 import com.example.baitapquatrinh2.Models.Customer;
 
 import java.io.File;
+import java.security.Provider;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,13 +37,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout_activity);
-
         container = findViewById(R.id.frameId);
         Button buttonInput = findViewById(R.id.btnInput);
         Button buttonUse = findViewById(R.id.btnUse);
         Button buttonList = findViewById(R.id.btnList);
         Button btnExport = findViewById(R.id.btnExport);
         btnChangePass = findViewById(R.id.btnChangePass);
+//        CustomerProvider.copyCustomersFileToInternalStorage(this);
 //        btnExport.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void setupRecyclerView() {
         // Tải dữ liệu khách hàng
-        customerList = new ArrayList<>(CustomerData.loadCustomers(this));
+        customerList = new ArrayList<>(CustomerProvider.loadCustomers(this));
 
         // Kiểm tra nếu danh sách khách hàng trống
         if (customerList == null || customerList.isEmpty()) {

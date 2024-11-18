@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.baitapquatrinh2.ContentProvider.CustomerProvider;
-import com.example.baitapquatrinh2.LoadData.CustomerData;
 import com.example.baitapquatrinh2.Models.Customer;
 import com.example.baitapquatrinh2.R;
 import com.google.gson.Gson;
@@ -137,7 +136,7 @@ public class InputPointFragment extends Fragment {
 
         int newPoint = Integer.parseInt(newPointStr);
         int currentPoint = Integer.parseInt(tvCurrentPoint.getText().toString().trim());
-        currentPoint = currentPoint - newPoint;
+
 //        List<Customer> customerList = CustomerData.getCustomerList();
         List <Customer> customerList = CustomerProvider.getCustomerList();
         Customer existingCustomer = null;
