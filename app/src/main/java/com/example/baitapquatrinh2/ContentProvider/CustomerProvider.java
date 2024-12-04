@@ -182,48 +182,6 @@ public class CustomerProvider extends ContentProvider {
     }
 
 
-//
-//
-//public static List<Customer> loadCustomers(Context context) {
-//    List<Customer> customerList = new ArrayList<>();  // Initialize here
-//    try {
-//        InputStream inputStream = context.getAssets().open("customers.json");
-//        InputStreamReader reader = new InputStreamReader(inputStream);
-//        customerList = new Gson().fromJson(reader, new TypeToken<List<Customer>>() {}.getType());
-//        reader.close();
-//        inputStream.close();
-//    } catch (IOException e) {
-//        Log.e("CustomerData", "Lỗi khi đọc file customers.json: " + e.getMessage());
-//    }
-//    return customerList;  // Ensure you return a non-null list
-//}
-
-//  public static   List<Customer> loadCustomers(Context context) {
-//        try {
-//            // Kiểm tra xem file đã tồn tại trong bộ nhớ nội bộ chưa
-//            File file = new File(context.getFilesDir(), "customers.json");
-//            if (!file.exists()) {
-//                // Sao chép file từ assets vào bộ nhớ nội bộ
-//                InputStream inputStream = context.getAssets().open("customers.json");
-//                FileOutputStream outputStream = new FileOutputStream(file);
-//
-//                byte[] buffer = new byte[1024];
-//                int length;
-//                while ((length = inputStream.read(buffer)) > 0) {
-//                    outputStream.write(buffer, 0, length);
-//                }
-//                outputStream.close();
-//                inputStream.close();
-//            }
-//
-//            // Đọc file từ bộ nhớ nội bộ
-//            InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
-//            return new Gson().fromJson(reader, new TypeToken<List<Customer>>() {}.getType());
-//        } catch (IOException e) {
-//            Log.e(TAG, "Lỗi khi đọc file customers.json", e);
-//        }
-//        return null;
-//    }
 public static List<Customer> loadCustomers(Context context) {
     try {
         File file = new File(context.getFilesDir(), "customers.json");

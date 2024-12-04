@@ -23,7 +23,6 @@ import com.example.baitapquatrinh2.Customer.UsePointFragment;
 import com.example.baitapquatrinh2.Models.Customer;
 
 import java.io.File;
-import java.security.Provider;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
         Button buttonList = findViewById(R.id.btnList);
         Button btnExport = findViewById(R.id.btnExport);
         btnChangePass = findViewById(R.id.btnChangePass);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frameId, new WellcomeFragment());
+        transaction.commit();
+
+
 //        CustomerProvider.copyCustomersFileToInternalStorage(this);
 //        btnExport.setOnClickListener(new View.OnClickListener() {
 //            @Override

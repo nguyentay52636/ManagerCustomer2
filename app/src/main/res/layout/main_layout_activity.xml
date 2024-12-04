@@ -45,7 +45,7 @@
             android:backgroundTint="@color/code"
             android:drawableLeft="@drawable/baseline_input_24"
             android:gravity="center"
-            android:padding="24dp"
+            android:padding="20dp"
             android:textColor="#FFFFFF" />
 
         <!-- Nút Use -->
@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/code"
             android:drawableLeft="@drawable/baseline_person_24"
-            android:padding="24dp"
+            android:padding="20dp"
             android:textColor="#FFFFFF" />
 
         <!-- Nút List -->
@@ -70,7 +70,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/code"
             android:drawableLeft="@drawable/baseline_list_alt_24"
-            android:padding="24dp"
+            android:padding="20dp"
             android:textColor="#FFFFFF" />
 
         <!-- Nút Change Pass -->
@@ -83,7 +83,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/code"
             android:drawableLeft="@drawable/baseline_password_24"
-            android:padding="24dp"
+            android:padding="20dp"
             android:textColor="#FFFFFF" />
 
         <!-- Nút Export -->
@@ -96,7 +96,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/code"
             android:drawableLeft="@drawable/baseline_import_export_24"
-            android:padding="24dp"
+            android:padding="20dp"
             android:textColor="#FFFFFF" />
 
     </LinearLayout>

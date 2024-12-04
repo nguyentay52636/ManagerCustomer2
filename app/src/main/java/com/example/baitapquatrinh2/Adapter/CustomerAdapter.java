@@ -50,9 +50,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
             tvCreationDate = itemView.findViewById(R.id.tvCreationDate);
             tvLastUpdatedDate = itemView.findViewById(R.id.tvLastUpdatedDate);
             tvCurrentPoint = itemView.findViewById(R.id.tvCurrentPoint);
-            tvNote =  itemView.findViewById(R.id.tvNote);
+            tvNote = itemView.findViewById(R.id.tvNote);
         }
     }
 }
-
-

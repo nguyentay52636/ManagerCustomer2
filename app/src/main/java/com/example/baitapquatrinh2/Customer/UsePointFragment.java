@@ -136,7 +136,7 @@ public class UsePointFragment extends Fragment {
 
         int newPoint = Integer.parseInt(newPointStr);
         int currentPoint = Integer.parseInt(tvCurrentPoint.getText().toString().trim());
-        currentPoint = currentPoint - newPoint;
+
         List <Customer> customerList = CustomerProvider.getCustomerList();
         Customer existingCustomer = null;
 
@@ -148,7 +148,7 @@ public class UsePointFragment extends Fragment {
         }
 
         String creationDate = (existingCustomer != null) ? existingCustomer.getCreationDate() : getCurrentDate();
-        Customer updatedCustomer = new Customer(phone, currentPoint, creationDate, getCurrentDate(), note);
+        Customer updatedCustomer = new Customer(phone, currentPoint - newPoint, creationDate, getCurrentDate(), note);
 
         boolean customerExists = false;
         for (int i = 0; i < customerList.size(); i++) {

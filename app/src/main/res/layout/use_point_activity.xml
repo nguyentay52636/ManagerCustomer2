@@ -57,7 +57,7 @@
             android:layout_marginBottom="20dp"
             android:backgroundTint="#BBBBBB"
             android:padding="10dp"
-            android:text="20"
+            android:text=""
             android:textColor="#BBBBBB" />
 
         <!-- Input New Point -->

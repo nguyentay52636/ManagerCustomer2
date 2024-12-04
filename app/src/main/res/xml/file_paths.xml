@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Internal storage: /data/data/com.example.baitapquatrinh2/files/ -->
-    <files-path name="internal_files" path="files/" />
-
-    <!-- External storage: /storage/emulated/0/Android/data/com.example.baitapquatrinh2/files/Documents/ -->
-    <external-path name="external_files_documents" path="Documents/" />
-    <paths>
-        <external-path
-            name="documents"
-            path="Android/data/com.example.baitapquatrinh2/files/Documents/" />
-    </paths>
-
+    <external-path name="downloads" path="Download/" />
 </paths>

@@ -1,9 +1,19 @@
 package com.example.baitapquatrinh2;
+import androidx.annotation.Nullable;
+import androidx.documentfile.provider.DocumentFile;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.ActivityNotFoundException;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +30,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,46 +50,30 @@ public class ExportActivity extends AppCompatActivity {
         btnSendEmail = findViewById(R.id.btnSendEmail);
         tvStatus = findViewById(R.id.tvStatus);
 
-        // Xử lý sự kiện xuất file
-//        btnExportFile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                List<Customer> customers = getSampleCustomers();
-//                xmlFile = XMLHelper.exportCustomersToXML(customers, TestActivity.this);
-//                if (xmlFile != null && xmlFile.exists()) {
-//                    tvStatus.setText("Xuất file thành công tại " + xmlFile.getPath());
-//                    Toast.makeText(TestActivity.this, "Xuất file XML thành công!", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    tvStatus.setText("Xuất file thất bại.");
-//                    Toast.makeText(TestActivity.this, "Xuất file XML thất bại!", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
 
         btnExportFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 List<Customer> customers = CustomerProvider.loadCustomers(getApplicationContext());
-                Log.d("CustomerListSize", "Customer list size: " + customers.size());
+                Log.d("CustomerListSize", "Customer list size: " + (customers != null ? customers.size() : 0));
+
+                // Kiểm tra xem danh sách khách hàng có rỗng không
+                if (customers == null || customers.isEmpty()) {
+                    Log.e("ExportXML", "Danh sách khách hàng trống.");
+                    tvStatus.setText("Danh sách khách hàng trống.");
+                    Toast.makeText(ExportActivity.this, "Danh sách khách hàng trống!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+//                String xmlContent = convertCustomersToXMLString(customers);
+                // Log nội dung XML
+//                Log.d("CustomerXMLContent", "XML content: \n" + xmlContent);
 
                 File xmlFile = XMLHelper.exportCustomersToXML(customers, ExportActivity.this);
 
-                if (xmlFile != null && xmlFile.exists()) {
-                    tvStatus.setText("Xuất file thành công tại " + xmlFile.getPath());
+                if (xmlFile != null) {
+                    tvStatus.setText("Xuất file thành công tại thư mục Downloads!");
                     Toast.makeText(ExportActivity.this, "Xuất file XML thành công!", Toast.LENGTH_SHORT).show();
-
-                    // Đọc và ghi nội dung file XML ra Logcat
-                    try (BufferedReader reader = new BufferedReader(new FileReader(xmlFile))) {
-                        StringBuilder fileContent = new StringBuilder();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            fileContent.append(line).append("\n");
-                        }
-                        Log.d("XMLFileContent", fileContent.toString());  // Log nội dung XML
-
-                    } catch (IOException e) {
-                        Log.e("XMLFileContent", "Lỗi khi đọc file XML: " + e.getMessage());
-                    }
                 } else {
                     tvStatus.setText("Xuất file thất bại.");
                     Toast.makeText(ExportActivity.this, "Xuất file XML thất bại!", Toast.LENGTH_SHORT).show();
@@ -86,10 +81,12 @@ public class ExportActivity extends AppCompatActivity {
             }
         });
 
+
         btnOpenFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openXmlFile();
+//                openXmlFile();
+                openXmlFileUsingDocumentFile();
             }
         });
         // Xử lý sự kiện gửi email
@@ -109,38 +106,241 @@ public class ExportActivity extends AppCompatActivity {
         });
 
     }
+    private String convertCustomersToXMLString(List<Customer> customers) {
+        StringBuilder xmlBuilder = new StringBuilder();
+        xmlBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        xmlBuilder.append("<customers>\n");
 
-    private void openXmlFile() {
-        // Đường dẫn file
-        File file = new File(getExternalFilesDir("Documents"), "customers.xml");
-        Log.d("FilePath", "File path: " + file.getAbsolutePath());
+        for (Customer customer : customers) {
+            xmlBuilder.append("    <customer>\n");
+            xmlBuilder.append("        <phoneNumber>").append(customer.getPhoneNumber()).append("</phoneNumber>\n");
+            xmlBuilder.append("        <currentPoint>").append(customer.getCurrentPoint()).append("</currentPoint>\n");
+            xmlBuilder.append("        <creationDate>").append(customer.getCreationDate()).append("</creationDate>\n");
+            xmlBuilder.append("        <lastUpdatedDate>").append(customer.getLastUpdatedDate()).append("</lastUpdatedDate>\n");
+            xmlBuilder.append("        <note>").append(customer.getNote()).append("</note>\n");
+            xmlBuilder.append("    </customer>\n");
+        }
 
-        // Kiểm tra xem file có tồn tại không
-        if (file.exists()) {
-            try {
-                // Lấy URI thông qua FileProvider
-                Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", file);
-                Log.d("FileUri", "URI: " + uri.toString());
+        xmlBuilder.append("</customers>");
+        return xmlBuilder.toString();
+    }
 
-                // Tạo intent để mở file
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(uri, "application/xml"); // Thay đổi MIME type chính xác
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//    public void openXmlFile() {
+//        try {
+//            // Tên file cần tìm
+//            String fileName = "customers.xml";
+//
+//            // Truy vấn MediaStore để lấy URI của file từ thư mục Downloads
+//            Uri fileUri = null;
+//            String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + "=?";
+//            String[] selectionArgs = new String[]{fileName};
+//
+//            // Truy vấn tệp từ MediaStore
+//            try (Cursor cursor = getContentResolver().query(
+//                    MediaStore.Files.getContentUri("external"),
+//                    null, // Trả về tất cả các cột
+//                    selection,
+//                    selectionArgs,
+//                    null // Không cần sắp xếp
+//            )) {
+//                if (cursor != null && cursor.moveToFirst()) {
+//                    // Lấy ID của file trong MediaStore
+//                    int idColumn = cursor.getColumnIndex(MediaStore.Files.FileColumns._ID);
+//                    if (idColumn != -1) {
+//                        long id = cursor.getLong(idColumn);
+//
+//                        // Tạo URI của file từ ID
+//                        fileUri = ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), id);
+//                        Log.d("FileUri", "URI của file: " + fileUri.toString());
+//                    } else {
+//                        Log.e("FileError", "Không tìm thấy cột ID");
+//                    }
+//                }
+//            }
+//
+//            // Kiểm tra fileUri
+//            if (fileUri != null) {
+//                // Tạo Intent để mở file
+//                Intent intent = new Intent(Intent.ACTION_VIEW);
+//                intent.setDataAndType(fileUri, "text/xml");
+//                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//
+//                // Kiểm tra ứng dụng có thể xử lý Intent không
+//                if (intent.resolveActivity(getPackageManager()) != null) {
+//                    startActivity(Intent.createChooser(intent, "Mở file XML với:"));
+//                } else {
+//                    Toast.makeText(this, "Không có ứng dụng nào hỗ trợ mở file XML!", Toast.LENGTH_SHORT).show();
+//                    Log.e("IntentError", "Không tìm thấy ứng dụng hỗ trợ mở file XML");
+//                }
+//            } else {
+//                Toast.makeText(this, "File không tồn tại trong thư mục Downloads!", Toast.LENGTH_SHORT).show();
+//                Log.e("FileError", "Không tìm thấy file với tên: " + fileName);
+//            }
+//        } catch (Exception e) {
+//            Log.e("OpenFileError", "Lỗi khi mở file: " + e.getMessage());
+//            Toast.makeText(this, "Đã xảy ra lỗi khi mở file", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
-                // Kiểm tra xem có ứng dụng nào có thể xử lý intent không
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(Intent.createChooser(intent, "Mở file XML"));
-                } else {
-                    Toast.makeText(this, "Không có ứng dụng nào có thể mở file XML", Toast.LENGTH_SHORT).show();
+
+
+
+    public void openXmlFile() {
+        try {
+            // Tên file cần tìm
+            String fileName = "customers.xml";
+
+            // Truy vấn MediaStore để lấy URI của file từ thư mục Downloads
+            Uri fileUri = null;
+            String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + "=?";
+            String[] selectionArgs = new String[]{fileName};
+
+            // Truy vấn tệp từ MediaStore
+            try (Cursor cursor = getContentResolver().query(
+                    MediaStore.Files.getContentUri("external"),
+                    null, // Trả về tất cả các cột
+                    selection,
+                    selectionArgs,
+                    null // Không cần sắp xếp
+            )) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    // Lấy ID của file trong MediaStore
+                    int idColumn = cursor.getColumnIndex(MediaStore.Files.FileColumns._ID);
+                    if (idColumn != -1) {
+                        long id = cursor.getLong(idColumn);
+
+                        // Tạo URI của file từ ID
+                        fileUri = ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), id);
+                        Log.d("FileUri", "URI của file: " + fileUri.toString());
+                    } else {
+                        Log.e("FileError", "Không tìm thấy cột ID");
+                    }
                 }
-            } catch (IllegalArgumentException e) {
-                Log.e("FileProviderError", "Lỗi FileProvider: " + e.getMessage());
-                Toast.makeText(this, "Lỗi khi xử lý file với FileProvider", Toast.LENGTH_SHORT).show();
+            }
+
+            // Kiểm tra fileUri
+            if (fileUri != null) {
+                // Tạo DocumentFile từ URI
+                DocumentFile documentFile = DocumentFile.fromSingleUri(this, fileUri);
+
+                if (documentFile != null && documentFile.exists()) {
+                    InputStream inputStream = getContentResolver().openInputStream(fileUri);
+
+                    // Sử dụng XmlPullParser để xử lý nội dung XML
+                    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+                    XmlPullParser parser = factory.newPullParser();
+                    if (inputStream != null) {
+                        parser.setInput(inputStream, null);
+
+                        int eventType = parser.getEventType();
+                        while (eventType != XmlPullParser.END_DOCUMENT) {
+                            switch (eventType) {
+                                case XmlPullParser.START_TAG:
+                                    String tagName = parser.getName();
+                                    if ("customer".equals(tagName)) {
+                                        // Xử lý dữ liệu của khách hàng ở đây
+                                        String customerId = parser.getAttributeValue(null, "id");
+                                        String customerName = parser.nextText();
+                                        Log.d("CustomerInfo", "ID: " + customerId + " Name: " + customerName);
+                                    }
+                                    break;
+                            }
+                            eventType = parser.next();
+                        }
+                        inputStream.close();
+                    }
+                }
+            } else {
+                Toast.makeText(this, "File không tồn tại trong thư mục Downloads!", Toast.LENGTH_SHORT).show();
+                Log.e("FileError", "Không tìm thấy file với tên: " + fileName);
+            }
+        } catch (Exception e) {
+            Log.e("OpenFileError", "Lỗi khi mở file: " + e.getMessage());
+            Toast.makeText(this, "Đã xảy ra lỗi khi mở file", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+
+    public void openXmlFileUsingDocumentFile() {
+        try {
+            // Tạo Intent để chọn tệp XML
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.setType("text/xml"); // Định dạng MIME phù hợp
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+            // Không sử dụng Intent.EXTRA_INITIAL_INTENTS
+            // Nếu muốn chọn thư mục cụ thể, cần sử dụng Storage Access Framework (SAF)
+
+            startActivityForResult(intent, 1); // Mã yêu cầu
+        } catch (Exception e) {
+            Log.e("FileError", "Lỗi khi mở tệp: " + e.getMessage());
+            Toast.makeText(this, "Đã xảy ra lỗi khi mở tệp!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            Uri fileUri = data.getData(); // URI của tệp được chọn
+
+            if (fileUri != null) {
+                Log.d("FileUri", "URI file: " + fileUri.toString());
+
+                // Đọc nội dung XML từ URI
+                try (InputStream inputStream = getContentResolver().openInputStream(fileUri)) {
+                    if (inputStream != null) {
+                        parseXmlFile(inputStream);
+                    } else {
+                        Log.e("FileError", "Không thể mở luồng dữ liệu từ URI");
+                        Toast.makeText(this, "Không thể đọc tệp!", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Log.e("XMLParseError", "Lỗi khi đọc tệp XML: " + e.getMessage());
+                    Toast.makeText(this, "Lỗi khi phân tích tệp XML!", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Log.e("FileError", "URI file null");
+                Toast.makeText(this, "Không chọn tệp!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            // Thông báo nếu file không tồn tại
-            Toast.makeText(this, "File không tồn tại!", Toast.LENGTH_SHORT).show();
-            Log.e("FileError", "File không tồn tại tại: " + file.getAbsolutePath());
+            Log.e("FileError", "Không chọn tệp hoặc lỗi xảy ra");
+            Toast.makeText(this, "Không chọn tệp hoặc lỗi xảy ra!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Phương thức phân tích XML
+    private void parseXmlFile(InputStream inputStream) {
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            XmlPullParser parser = factory.newPullParser();
+            parser.setInput(inputStream, "UTF-8");
+
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_TAG) {
+                    String tagName = parser.getName();
+                    if ("customer".equals(tagName)) {
+                        String phoneNumber = parser.getAttributeValue(null, "phoneNumber");
+                        String currentPoint = parser.getAttributeValue(null, "currentPoint");
+                        String creationDate = parser.getAttributeValue(null, "creationDate");
+                        String lastUpdatedDate = parser.getAttributeValue(null, "lastUpdatedDate");
+                        String note = parser.getAttributeValue(null, "note");
+
+                        Log.d("CustomerXML", "Phone: " + phoneNumber +
+                                ", Point: " + currentPoint +
+                                ", Created: " + creationDate +
+                                ", Updated: " + lastUpdatedDate +
+                                ", Note: " + note);
+                    }
+                }
+                eventType = parser.next();
+            }
+        } catch (Exception e) {
+            Log.e("XMLParseError", "Lỗi khi phân tích XML: " + e.getMessage());
         }
     }
 
