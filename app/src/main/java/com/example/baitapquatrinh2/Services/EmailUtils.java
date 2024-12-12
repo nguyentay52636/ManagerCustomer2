@@ -1,4 +1,4 @@
-package com.example.baitapquatrinh2.Utils;
+package com.example.baitapquatrinh2.Services;
 
 import android.content.Intent;
 import android.net.Uri;

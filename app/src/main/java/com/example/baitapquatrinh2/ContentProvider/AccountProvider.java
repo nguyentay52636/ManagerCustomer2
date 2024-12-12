@@ -36,16 +36,6 @@ public class AccountProvider extends ContentProvider {
         return accountList != null;
     }
 
-    // Phương thức để tải dữ liệu từ file JSON
-//    private List<Account> loadAccounts(Context context) {
-//        try {
-//            InputStreamReader reader = new InputStreamReader(context.getAssets().open("accounts.json"));
-//            return new Gson().fromJson(reader, new TypeToken<List<Account>>() {}.getType());
-//        } catch (IOException e) {
-//            Log.e(TAG, "Lỗi khi đọc file accounts.json", e);
-//        }
-//        return null;
-//    }
     private List<Account> loadAccounts(Context context) {
         try {
             File file = new File(context.getFilesDir(), "accounts.json");
@@ -134,8 +124,6 @@ public class AccountProvider extends ContentProvider {
         try {
             Gson gson = new Gson();
             String json = gson.toJson(accountList);
-
-            // Ghi file vào bộ nhớ nội bộ
             FileOutputStream fos = context.openFileOutput("accounts.json", Context.MODE_PRIVATE);
             fos.write(json.getBytes());
             fos.flush(); // Đảm bảo tất cả dữ liệu được ghi

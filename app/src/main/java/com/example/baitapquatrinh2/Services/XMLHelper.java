@@ -1,4 +1,4 @@
-package com.example.baitapquatrinh2.Utils;
+package com.example.baitapquatrinh2.Services;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,59 +18,6 @@ import java.util.List;
 import com.example.baitapquatrinh2.Models.Customer;
 
 public class XMLHelper {
-
-//    public static File exportCustomersToXML(List<Customer> customers, Context context) {
-//        try {
-//            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//            DocumentBuilder builder = factory.newDocumentBuilder();
-//            Document document = builder.newDocument();
-//
-//            // Tạo phần tử gốc <customers>
-//            Element root = document.createElement("customers");
-//            document.appendChild(root);
-//
-//            // Thêm các đối tượng Customer vào XML
-//            for (Customer customer : customers) {
-//                Element customerElement = document.createElement("customer");
-//
-//                Element phoneNumber = document.createElement("phoneNumber");
-//                phoneNumber.appendChild(document.createTextNode(customer.getPhoneNumber()));
-//                customerElement.appendChild(phoneNumber);
-//
-//                Element currentPoint = document.createElement("currentPoint");
-//                currentPoint.appendChild(document.createTextNode(String.valueOf(customer.getCurrentPoint())));
-//                customerElement.appendChild(currentPoint);
-//
-//                Element creationDate = document.createElement("creationDate");
-//                creationDate.appendChild(document.createTextNode(customer.getCreationDate()));
-//                customerElement.appendChild(creationDate);
-//
-//                Element lastUpdatedDate = document.createElement("lastUpdatedDate");
-//                lastUpdatedDate.appendChild(document.createTextNode(customer.getLastUpdatedDate()));
-//                customerElement.appendChild(lastUpdatedDate);
-//
-//                Element note = document.createElement("note");
-//                note.appendChild(document.createTextNode(customer.getNote()));
-//                customerElement.appendChild(note);
-//
-//                root.appendChild(customerElement);
-//            }
-//
-//
-//            File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "customers.xml");
-//            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//            Transformer transformer = transformerFactory.newTransformer();
-//            transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
-//            transformer.transform(new DOMSource(document), new StreamResult(new FileOutputStream(file)));
-//
-//            return file;
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//
-//    }
 public static File exportCustomersToXML(List<Customer> customers, Context context) {
     try {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -134,47 +81,6 @@ public static File exportCustomersToXML(List<Customer> customers, Context contex
     }
     return null;
 }
-
-
-//public static File exportCustomersToXML(List<Customer> customers, Context context) {
-//    File xmlFile = null;
-//
-//    try {
-//        File directory = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "Documents");
-//        if (!directory.exists()) {
-//            directory.mkdirs();
-//        }
-//
-//        xmlFile = new File(directory, "customers.xml");
-//
-//        FileWriter writer = new FileWriter(xmlFile);
-//        writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-//        writer.write("<customers>\n");
-//
-//        // Lặp qua từng đối tượng Customer trong danh sách và ghi vào file XML
-//        for (Customer customer : customers) {
-//            writer.write("    <customer>\n");
-//            writer.write("        <phoneNumber>" + customer.getPhoneNumber() + "</phoneNumber>\n");
-//            writer.write("        <currentPoint>" + customer.getCurrentPoint() + "</currentPoint>\n");
-//            writer.write("        <creationDate>" + customer.getCreationDate() + "</creationDate>\n");
-//            writer.write("        <lastUpdatedDate>" + customer.getLastUpdatedDate() + "</lastUpdatedDate>\n");
-//            writer.write("        <note>" + customer.getNote() + "</note>\n");
-//            writer.write("    </customer>\n");
-//        }
-//
-//        writer.write("</customers>");
-//        writer.flush();
-//        writer.close();
-//
-//    } catch (IOException e) {
-//        e.printStackTrace();
-//        return null;
-//    }
-//
-//    return xmlFile;
-//}
-
-
 
     public static List<Customer> importCustomersFromXML(Context context) {
         List<Customer> customerList = new ArrayList<>();

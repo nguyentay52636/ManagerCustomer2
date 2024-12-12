@@ -1,41 +1,26 @@
 package com.example.baitapquatrinh2;
 import androidx.annotation.Nullable;
-import androidx.documentfile.provider.DocumentFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
-
-import android.content.ActivityNotFoundException;
-import android.content.ContentUris;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import com.example.baitapquatrinh2.ContentProvider.CustomerProvider;
 import com.example.baitapquatrinh2.Models.Customer;
-import com.example.baitapquatrinh2.Utils.XMLHelper;
-
-import java.io.BufferedReader;
+import com.example.baitapquatrinh2.Services.XMLHelper;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ExportActivity extends AppCompatActivity {
-
+    private Uri selectedFileUri = null;
+    private static final int REQUEST_CODE_PICK_FILE =1 ;
     private Button btnExportFile, btnOpenFile, btnSendEmail;
     private TextView tvStatus;
     private File xmlFile;
@@ -93,17 +78,15 @@ public class ExportActivity extends AppCompatActivity {
         btnSendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File xmlFile = new File("/storage/emulated/0/Android/data/com.example.baitapquatrinh2/files/Documents/customers.xml");
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setType("message/rfc822");
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "sent file customer.xml");
 
-                // Đảm bảo file tồn tại và đường dẫn chính xác
-                if (xmlFile != null && xmlFile.exists()) {
-                    sendEmailWithAttachment(xmlFile); // Gọi phương thức gửi email với file đính kèm
-                } else {
-                    // Thông báo nếu file không tồn tại hoặc không hợp lệ
-                    Toast.makeText(ExportActivity.this, "File không tồn tại để gửi email!", Toast.LENGTH_SHORT).show();
-                }
+                startActivity(emailIntent);
+
             }
         });
+
 
     }
     private String convertCustomersToXMLString(List<Customer> customers) {
@@ -125,140 +108,7 @@ public class ExportActivity extends AppCompatActivity {
         return xmlBuilder.toString();
     }
 
-//    public void openXmlFile() {
-//        try {
-//            // Tên file cần tìm
-//            String fileName = "customers.xml";
-//
-//            // Truy vấn MediaStore để lấy URI của file từ thư mục Downloads
-//            Uri fileUri = null;
-//            String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + "=?";
-//            String[] selectionArgs = new String[]{fileName};
-//
-//            // Truy vấn tệp từ MediaStore
-//            try (Cursor cursor = getContentResolver().query(
-//                    MediaStore.Files.getContentUri("external"),
-//                    null, // Trả về tất cả các cột
-//                    selection,
-//                    selectionArgs,
-//                    null // Không cần sắp xếp
-//            )) {
-//                if (cursor != null && cursor.moveToFirst()) {
-//                    // Lấy ID của file trong MediaStore
-//                    int idColumn = cursor.getColumnIndex(MediaStore.Files.FileColumns._ID);
-//                    if (idColumn != -1) {
-//                        long id = cursor.getLong(idColumn);
-//
-//                        // Tạo URI của file từ ID
-//                        fileUri = ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), id);
-//                        Log.d("FileUri", "URI của file: " + fileUri.toString());
-//                    } else {
-//                        Log.e("FileError", "Không tìm thấy cột ID");
-//                    }
-//                }
-//            }
-//
-//            // Kiểm tra fileUri
-//            if (fileUri != null) {
-//                // Tạo Intent để mở file
-//                Intent intent = new Intent(Intent.ACTION_VIEW);
-//                intent.setDataAndType(fileUri, "text/xml");
-//                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//
-//                // Kiểm tra ứng dụng có thể xử lý Intent không
-//                if (intent.resolveActivity(getPackageManager()) != null) {
-//                    startActivity(Intent.createChooser(intent, "Mở file XML với:"));
-//                } else {
-//                    Toast.makeText(this, "Không có ứng dụng nào hỗ trợ mở file XML!", Toast.LENGTH_SHORT).show();
-//                    Log.e("IntentError", "Không tìm thấy ứng dụng hỗ trợ mở file XML");
-//                }
-//            } else {
-//                Toast.makeText(this, "File không tồn tại trong thư mục Downloads!", Toast.LENGTH_SHORT).show();
-//                Log.e("FileError", "Không tìm thấy file với tên: " + fileName);
-//            }
-//        } catch (Exception e) {
-//            Log.e("OpenFileError", "Lỗi khi mở file: " + e.getMessage());
-//            Toast.makeText(this, "Đã xảy ra lỗi khi mở file", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
-
-
-
-    public void openXmlFile() {
-        try {
-            // Tên file cần tìm
-            String fileName = "customers.xml";
-
-            // Truy vấn MediaStore để lấy URI của file từ thư mục Downloads
-            Uri fileUri = null;
-            String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + "=?";
-            String[] selectionArgs = new String[]{fileName};
-
-            // Truy vấn tệp từ MediaStore
-            try (Cursor cursor = getContentResolver().query(
-                    MediaStore.Files.getContentUri("external"),
-                    null, // Trả về tất cả các cột
-                    selection,
-                    selectionArgs,
-                    null // Không cần sắp xếp
-            )) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    // Lấy ID của file trong MediaStore
-                    int idColumn = cursor.getColumnIndex(MediaStore.Files.FileColumns._ID);
-                    if (idColumn != -1) {
-                        long id = cursor.getLong(idColumn);
-
-                        // Tạo URI của file từ ID
-                        fileUri = ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), id);
-                        Log.d("FileUri", "URI của file: " + fileUri.toString());
-                    } else {
-                        Log.e("FileError", "Không tìm thấy cột ID");
-                    }
-                }
-            }
-
-            // Kiểm tra fileUri
-            if (fileUri != null) {
-                // Tạo DocumentFile từ URI
-                DocumentFile documentFile = DocumentFile.fromSingleUri(this, fileUri);
-
-                if (documentFile != null && documentFile.exists()) {
-                    InputStream inputStream = getContentResolver().openInputStream(fileUri);
-
-                    // Sử dụng XmlPullParser để xử lý nội dung XML
-                    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-                    XmlPullParser parser = factory.newPullParser();
-                    if (inputStream != null) {
-                        parser.setInput(inputStream, null);
-
-                        int eventType = parser.getEventType();
-                        while (eventType != XmlPullParser.END_DOCUMENT) {
-                            switch (eventType) {
-                                case XmlPullParser.START_TAG:
-                                    String tagName = parser.getName();
-                                    if ("customer".equals(tagName)) {
-                                        // Xử lý dữ liệu của khách hàng ở đây
-                                        String customerId = parser.getAttributeValue(null, "id");
-                                        String customerName = parser.nextText();
-                                        Log.d("CustomerInfo", "ID: " + customerId + " Name: " + customerName);
-                                    }
-                                    break;
-                            }
-                            eventType = parser.next();
-                        }
-                        inputStream.close();
-                    }
-                }
-            } else {
-                Toast.makeText(this, "File không tồn tại trong thư mục Downloads!", Toast.LENGTH_SHORT).show();
-                Log.e("FileError", "Không tìm thấy file với tên: " + fileName);
-            }
-        } catch (Exception e) {
-            Log.e("OpenFileError", "Lỗi khi mở file: " + e.getMessage());
-            Toast.makeText(this, "Đã xảy ra lỗi khi mở file", Toast.LENGTH_SHORT).show();
-        }
-    }
 
 
 
@@ -273,7 +123,7 @@ public class ExportActivity extends AppCompatActivity {
             // Không sử dụng Intent.EXTRA_INITIAL_INTENTS
             // Nếu muốn chọn thư mục cụ thể, cần sử dụng Storage Access Framework (SAF)
 
-            startActivityForResult(intent, 1); // Mã yêu cầu
+            startActivityForResult(intent, 1);
         } catch (Exception e) {
             Log.e("FileError", "Lỗi khi mở tệp: " + e.getMessage());
             Toast.makeText(this, "Đã xảy ra lỗi khi mở tệp!", Toast.LENGTH_SHORT).show();
@@ -346,25 +196,5 @@ public class ExportActivity extends AppCompatActivity {
 
 
 
-    private void sendEmailWithAttachment(File file) {
-        if (file.exists()) {
-            Uri uri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);
-
-            Intent emailIntent = new Intent(Intent.ACTION_SEND);
-            emailIntent.setType("vnd.android.cursor.dir/email");
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "File XML Danh Sách Khách Hàng");
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "Đính kèm là file XML danh sách khách hàng.");
-            emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            emailIntent.setType("message/rfc822");
-
-            try {
-                startActivity(Intent.createChooser(emailIntent, "Gửi email với file đính kèm"));
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(this, "Không có ứng dụng email nào được cài đặt.", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "File không tồn tại!", Toast.LENGTH_SHORT).show();
-        }
-    }
 
 }

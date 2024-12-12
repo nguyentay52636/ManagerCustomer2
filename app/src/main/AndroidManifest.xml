@@ -38,8 +38,8 @@
         <activity android:name=".Credentials.FormConfrmChangePass" android:exported="true"/>
         <activity android:name=".Customer.UsePointFragment" android:exported="true"/>
         <activity android:name=".ExportActivity" android:exported="true"/>
-        <activity android:name=".Utils.TestActivity" android:exported="true"/>
-        <activity android:name=".TestXuatFile" android:exported="true"/>
+
+
 
         <!-- Cung cấp FileProvider -->
         <provider
