@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.baitapquatrinh2.ContentProvider.AccountProvider;
 import com.example.baitapquatrinh2.Models.Account;
 import com.example.baitapquatrinh2.MainActivity;
 import com.example.baitapquatrinh2.R;
@@ -57,7 +58,7 @@ public class LoginForm extends AppCompatActivity {
                     Toast.makeText(LoginForm.this, "Please enter both username and password.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                List<Account> accountList = DataAccount.loadAccounts(LoginForm.this); // Gọi phương thức loadAccounts để lấy dữ liệu tài khoản
+                List<Account> accountList = AccountProvider.loadAccounts(LoginForm.this); // Gọi phương thức loadAccounts để lấy dữ liệu tài khoản
 
                 boolean loginSuccess = false;
                 boolean usernameFound = false;
@@ -92,70 +93,5 @@ public class LoginForm extends AppCompatActivity {
                 }
             }
         });
-//        btnLogin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String usernameInput = userName.getText().toString().trim();
-//                String passwordInput = password.getText().toString().trim();
-//
-//                if (usernameInput.isEmpty() || passwordInput.isEmpty()) {
-//                    Toast.makeText(LoginForm.this, "Please enter both username and password.", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//
-//                // Sử dụng ContentResolver để truy vấn tài khoản từ AccountProvider
-//                Uri uri = Uri.parse("content://com.example.baitapquatrinh2.provider/accounts");
-//                Cursor cursor = getContentResolver().query(uri, new String[]{"username", "password"}, null, null, null);
-//
-//                if (cursor != null) {
-//                    boolean loginSuccess = false;
-//                    boolean usernameFound = false;
-//
-//                    // Kiểm tra nếu cursor có dữ liệu
-//                    while (cursor.moveToNext()) {
-//                        // Lấy chỉ số của các cột
-//                        int usernameIndex = cursor.getColumnIndex("username");
-//                        int passwordIndex = cursor.getColumnIndex("password");
-//
-//                        // Kiểm tra nếu các chỉ số cột hợp lệ (>= 0)
-//                        if (usernameIndex >= 0 && passwordIndex >= 0) {
-//                            String username = cursor.getString(usernameIndex);
-//                            String password = cursor.getString(passwordIndex);
-//
-//                            if (username.equals(usernameInput)) {
-//                                usernameFound = true;
-//                                if (password.equals(passwordInput)) {
-//                                    loginSuccess = true;
-//                                    break;
-//                                } else {
-//                                    Toast.makeText(LoginForm.this, "Incorrect password.", Toast.LENGTH_SHORT).show();
-//                                    break;
-//                                }
-//                            }
-//                        } else {
-////                            Log.e(AG, "Cột không tồn tại trong cursor");
-//                        }
-//                    }
-//
-//                    // Xử lý kết quả đăng nhập
-//                    if (usernameFound) {
-//                        if (loginSuccess) {
-//                            Toast.makeText(LoginForm.this, "Login success", Toast.LENGTH_SHORT).show();
-//                            Intent intent = new Intent(LoginForm.this, MainActivity.class);
-//                            startActivity(intent);
-//                        } else {
-//                            Toast.makeText(LoginForm.this, "Incorrect password.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    } else {Toast.makeText(LoginForm.this, "Username not found.", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    // Đóng cursor sau khi sử dụng xong
-//                    cursor.close();
-//                }
-//            }
-//        });
-
-
-
     }
 }

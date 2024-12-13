@@ -38,7 +38,6 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.recyclerview)
     implementation("com.google.code.gson:gson:2.8.9")
-        implementation ("mysql:mysql-connector-java:8.0.31")
     implementation ("androidx.documentfile:documentfile:1.0.1")
 
     testImplementation(libs.junit)

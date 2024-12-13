@@ -41,19 +41,12 @@ public class ExportActivity extends AppCompatActivity {
             public void onClick(View v) {
                 List<Customer> customers = CustomerProvider.loadCustomers(getApplicationContext());
                 Log.d("CustomerListSize", "Customer list size: " + (customers != null ? customers.size() : 0));
-
-                // Kiểm tra xem danh sách khách hàng có rỗng không
                 if (customers == null || customers.isEmpty()) {
                     Log.e("ExportXML", "Danh sách khách hàng trống.");
                     tvStatus.setText("Danh sách khách hàng trống.");
                     Toast.makeText(ExportActivity.this, "Danh sách khách hàng trống!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-//                String xmlContent = convertCustomersToXMLString(customers);
-                // Log nội dung XML
-//                Log.d("CustomerXMLContent", "XML content: \n" + xmlContent);
-
                 File xmlFile = XMLHelper.exportCustomersToXML(customers, ExportActivity.this);
 
                 if (xmlFile != null) {

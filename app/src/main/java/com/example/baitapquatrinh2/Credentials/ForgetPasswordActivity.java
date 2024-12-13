@@ -10,8 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.baitapquatrinh2.ContentProvider.AccountProvider;
 import com.example.baitapquatrinh2.R;
-import com.example.baitapquatrinh2.LoadData.DataAccount;
 import com.example.baitapquatrinh2.Models.Account;
 
 import java.util.List;
@@ -30,7 +30,6 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         btnContinue = findViewById(R.id.btnOk);
         edtUsername = findViewById(R.id.username);
 
-        // Nút quay lại đăng nhập
         btnBackLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,9 +49,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                     Toast.makeText(ForgetPasswordActivity.this, "Please enter a username", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                // Gọi phương thức loadAccounts để lấy danh sách tài khoản từ file
-                List<Account> accountList = DataAccount.loadAccounts(ForgetPasswordActivity.this);
+                List<Account> accountList = AccountProvider.loadAccounts(ForgetPasswordActivity.this);
 
                 // Kiểm tra xem tài khoản có tồn tại không
                 boolean usernameExists = false;
@@ -64,13 +61,11 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                 }
 
                 if (usernameExists) {
-                    // Nếu username tồn tại, chuyển sang màn hình thay đổi mật khẩu
                     Intent intent = new Intent(ForgetPasswordActivity.this, FormConfrmChangePass.class);
-                    intent.putExtra("username", username); // Truyền username sang màn hình thay đổi mật khẩu
+                    intent.putExtra("username", username);
                     startActivity(intent);
                     finish();
                 } else {
-                    // Nếu username không tồn tại, hiển thị thông báo
                     Toast.makeText(ForgetPasswordActivity.this, "Username not found", Toast.LENGTH_SHORT).show();
                 }
             }
