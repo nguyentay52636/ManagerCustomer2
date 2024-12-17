@@ -19,7 +19,6 @@ import com.example.baitapquatrinh2.ContentProvider.AccountProvider;
 import com.example.baitapquatrinh2.Models.Account;
 import com.example.baitapquatrinh2.MainActivity;
 import com.example.baitapquatrinh2.R;
-import com.example.baitapquatrinh2.LoadData.DataAccount;
 
 import java.util.List;
 

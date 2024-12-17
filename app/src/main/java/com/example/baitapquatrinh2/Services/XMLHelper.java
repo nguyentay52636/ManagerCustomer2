@@ -82,17 +82,25 @@ public static File exportCustomersToXML(List<Customer> customers, Context contex
     return null;
 }
 
-    public static List<Customer> importCustomersFromXML(Context context) {
+    public static List<Customer> importCustomersFromXML(Context context, Uri fileUri) {
         List<Customer> customerList = new ArrayList<>();
 
-        try {
-            FileInputStream fis = context.openFileInput("customers.xml");
+        try (InputStream inputStream = context.getContentResolver().openInputStream(fileUri)) {
+            if (inputStream == null) {
+                Log.e("ImportXML", "InputStream null: Không thể mở file từ Uri");
+                return customerList;
+            }
+
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(fis);
+            Document document = builder.parse(inputStream);
 
             // Lấy danh sách các phần tử <customer>
             NodeList nodeList = document.getElementsByTagName("customer");
+            if (nodeList.getLength() == 0) {
+                Log.e("ImportXML", "File không chứa thẻ <customer>");
+                return customerList;
+            }
 
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
@@ -112,10 +120,16 @@ public static File exportCustomersToXML(List<Customer> customers, Context contex
                 }
             }
 
+        } catch (FileNotFoundException e) {
+            Log.e("ImportXML", "File không tìm thấy: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            Log.e("ImportXML", "Lỗi chuyển đổi dữ liệu số: " + e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("ImportXML", "Lỗi khi đọc file: " + e.getMessage());
         }
 
         return customerList;
     }
+
+
 }

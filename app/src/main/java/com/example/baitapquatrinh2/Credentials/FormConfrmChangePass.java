@@ -68,23 +68,5 @@ public class FormConfrmChangePass extends AppCompatActivity {
     }
 
 
-//    // Định nghĩa URI ContentProvider với đường dẫn tương đối
-//    private static final String CONTENT_URI = "content://com.example.baitapquatrinh2.provider/accounts";
-//
-//    private boolean updatePassword(String username, String newPassword) {
-//        ContentValues values = new ContentValues();
-//        values.put("password", newPassword);
-//
-//        // Khởi tạo selection và selectionArgs để tìm đúng username
-//        String selection = "username = ?";
-//        String[] selectionArgs = new String[]{username};
-//
-//        // Sử dụng URI đã định nghĩa trước để cập nhật
-//        Uri uri = Uri.parse(CONTENT_URI);
-//        int rowsUpdated = getContentResolver().update(uri, values, selection, selectionArgs);
-//        return rowsUpdated > 0;
-//    }
-
-
 }
 

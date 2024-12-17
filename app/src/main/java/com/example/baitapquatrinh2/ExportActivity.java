@@ -1,4 +1,6 @@
 package com.example.baitapquatrinh2;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -21,10 +23,9 @@ import java.util.List;
 public class ExportActivity extends AppCompatActivity {
     private Uri selectedFileUri = null;
     private static final int REQUEST_CODE_PICK_FILE =1 ;
-    private Button btnExportFile, btnOpenFile, btnSendEmail;
+    private Button btnExportFile, btnOpenFile, btnSendEmail ,btnImport ;
     private TextView tvStatus;
-    private File xmlFile;
-
+    private ActivityResultLauncher<Intent> filePickerLauncher  ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,41 @@ public class ExportActivity extends AppCompatActivity {
         btnOpenFile = findViewById(R.id.btnOpenFile);
         btnSendEmail = findViewById(R.id.btnSendEmail);
         tvStatus = findViewById(R.id.tvStatus);
+        btnImport = findViewById(R.id.btnImportFile);
+             filePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == ExportActivity.RESULT_OK && result.getData() != null) {
+                        Uri fileUri = result.getData().getData();
+                        Log.d("FileSelected", "File được chọn: " + fileUri);
+
+                        try {
+                            List<Customer> importedCustomers = XMLHelper.importCustomersFromXML(this, fileUri);
+                            List<Customer> currentCustomers = CustomerProvider.getCustomerList();
+                            currentCustomers.addAll(importedCustomers);
+
+                            for (Customer newCustomer : importedCustomers) {
+                                if(CustomerProvider.isDuplicateCustomer(currentCustomers,newCustomer)) {
+                                    Log.d("DuplicateCustomer", "Khách hàng trùng: " + newCustomer.getPhoneNumber());
+                                }else {
+                                    currentCustomers.add(newCustomer);
+                                }
+                                Log.d("Customer", newCustomer.toString());
+                            }
+                            for (Customer customer : currentCustomers) {
+                                Log.d("Customer", customer.toString());
+                            }
+                            CustomerProvider.saveCustomerToJson(getApplicationContext(), currentCustomers);
+
+
+
+                        } catch (Exception e) {
+                            Log.e("FileError", "Lỗi khi đọc file: " + e.getMessage());
+                        }
+                    }
+                }
+        );
+
 
 
         btnExportFile.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +94,19 @@ public class ExportActivity extends AppCompatActivity {
                 }
             }
         });
-
+        btnImport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.setType("text/xml");
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    filePickerLauncher.launch(intent);
+                }catch (Exception e) {
+                    Log.e("FileError", "Lỗi import " + e.getMessage());
+                }
+            }
+        });
 
         btnOpenFile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,32 +127,7 @@ public class ExportActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
-    private String convertCustomersToXMLString(List<Customer> customers) {
-        StringBuilder xmlBuilder = new StringBuilder();
-        xmlBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        xmlBuilder.append("<customers>\n");
-
-        for (Customer customer : customers) {
-            xmlBuilder.append("    <customer>\n");
-            xmlBuilder.append("        <phoneNumber>").append(customer.getPhoneNumber()).append("</phoneNumber>\n");
-            xmlBuilder.append("        <currentPoint>").append(customer.getCurrentPoint()).append("</currentPoint>\n");
-            xmlBuilder.append("        <creationDate>").append(customer.getCreationDate()).append("</creationDate>\n");
-            xmlBuilder.append("        <lastUpdatedDate>").append(customer.getLastUpdatedDate()).append("</lastUpdatedDate>\n");
-            xmlBuilder.append("        <note>").append(customer.getNote()).append("</note>\n");
-            xmlBuilder.append("    </customer>\n");
-        }
-
-        xmlBuilder.append("</customers>");
-        return xmlBuilder.toString();
-    }
-
-
-
-
-
 
     public void openXmlFileUsingDocumentFile() {
         try {
@@ -155,7 +178,6 @@ public class ExportActivity extends AppCompatActivity {
         }
     }
 
-    // Phương thức phân tích XML
     private void parseXmlFile(InputStream inputStream) {
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();

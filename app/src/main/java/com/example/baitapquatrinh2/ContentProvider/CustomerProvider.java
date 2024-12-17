@@ -231,8 +231,15 @@ public static List<Customer> loadCustomers(Context context) {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // Thêm khách hàng mới nếu cần
-        return null;
+    String phoneNumber = values.getAsString("phoneNumber") ;
+    int currentPoint = values.getAsInteger("currentPoint") ;
+    String createDate = values.getAsString("creationDate") ;
+    String lastUpdateDate = values.getAsString("lastUpdateDate") ;
+    String note = values.getAsString("note") ;
+    Customer newCustomer  = new Customer(phoneNumber,currentPoint,createDate,lastUpdateDate,note) ;
+    customerList.add(newCustomer) ;
+    saveCustomerToJson(getContext(),customerList);
+    return Uri.withAppendedPath(CONTENT_URI,phoneNumber);
     }
 
     @Override
@@ -254,22 +261,28 @@ public static List<Customer> loadCustomers(Context context) {
     public static List<Customer> getCustomerList() {
         return customerList;
     }
+public static void saveCustomerToJson(Context context , List<Customer> customerList) {
+    try {
+        Gson gson  = new Gson();
+        String json = gson.toJson(customerList) ;
+        FileOutputStream fos = context.openFileOutput("customer.json",Context.MODE_PRIVATE);
+        fos.write(json.getBytes());
+        fos.flush();
+        fos.close();
+        Log.d(TAG, "Đã lưu dữ liệu customer vào file JSON.");
 
-    public void saveCustomersToJson(Context context, List<Customer> customerList) {
-        try {
-            Gson gson = new Gson();
-            String json = gson.toJson(customerList); // Chuyển đổi danh sách thành JSON
+    }catch (IOException e) {
+        Log.e(TAG, "Lỗi khi lưu file JSON", e);
 
-            // Ghi dữ liệu vào file trong bộ nhớ nội bộ
-            FileOutputStream fos = context.openFileOutput("customers.json", Context.MODE_PRIVATE);
-            fos.write(json.getBytes()); // Ghi dữ liệu JSON dưới dạng byte
-            fos.flush(); // Đảm bảo dữ liệu được ghi hoàn chỉnh
-            fos.close(); // Đóng file
-
-            Log.d("SaveJson", "Đã lưu dữ liệu khách hàng vào file JSON.");
-        } catch (IOException e) {
-            Log.e("SaveJson", "Lỗi khi lưu file JSON", e);
-        }
     }
+}
+public static boolean isDuplicateCustomer(List<Customer> existingCustomer,Customer newCustomer) {
+        for(Customer customer : existingCustomer) {
+            if(customer.getPhoneNumber().equals(newCustomer.getPhoneNumber())) {
+                return true ;
+            }
+        }
+        return false;
+}
 
 }

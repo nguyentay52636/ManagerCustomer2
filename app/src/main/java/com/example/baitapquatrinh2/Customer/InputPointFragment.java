@@ -98,7 +98,7 @@ public class InputPointFragment extends Fragment {
                 int currentPoint = Integer.parseInt(tvCurrentPoint.getText().toString());
 
                 if (newPoint >= currentPoint) {
-                    Toast.makeText(getContext(), "Số điểm phải thấp hơn điểm hiện tại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Số điểm phải thấp hơn điểm hiện tại", Toast.LENGTH_SHORT).show(); 
                     etNewPoint.setText("");
                 }
             }
